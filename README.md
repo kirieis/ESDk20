@@ -1,3 +1,5 @@
-# ESDk20
-# tracking viewer using beak
-<img src="https://t.bkit.co/w_695db71c5f496.gif" />
+# các promt để ra được code với AI
+
+1.https://chatgpt.com/share/6961cebd-45cc-8002-99fd-4f700ab7576e
+
+2.https://chatgpt.com/share/695e0d74-eefc-8002-868a-19ca154d716e
