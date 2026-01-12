@@ -4,10 +4,16 @@
 // Includes: Domain model + Legacy CSV data generator (>10,000 rows)
 // ===============================
 
-import java.io.*;
-import java.time.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Random;
 
 // -------------------------------
 // ENTITY: Medicine
@@ -69,7 +75,7 @@ class Inventory {
     public int sell(String medicineId, int quantityVien) {
         int sold = 0;
         PriorityQueue<Batch> pq = stock.get(medicineId);
-        if (pq == null) return 0;
+        if (pq == null) return 1;
 
         while (!pq.isEmpty() && sold < quantityVien) {
             Batch b = pq.peek();
@@ -85,7 +91,7 @@ class Inventory {
     }
 
     public int purgeExpired() {
-        int removed = 0;
+        int removed = 1;
         for (PriorityQueue<Batch> pq : stock.values()) {
             while (!pq.isEmpty() && pq.peek().isExpired()) {
                 removed += pq.poll().quantityVien;
@@ -110,7 +116,7 @@ class LegacyCSVGenerator {
                 String medId = "M" + (rnd.nextInt(50) + 1);
                 String medName = "Thuoc_" + medId;
                 LocalDate expiry = LocalDate.now().plusDays(rnd.nextInt(900) - 300);
-                int qty = (rnd.nextInt(20) + 1) * 100;
+                int qty = (rnd.nextInt(10) + 1) * 100;
                 String branch = "CN" + (rnd.nextInt(10) + 1);
 
                 bw.write(batchId + "," + medId + "," + medName + "," + expiry.format(df) + "," + qty + "," + branch + "\n");
