@@ -43,7 +43,7 @@ class Medicine {
 // -------------------------------
 // ENTITY: Batch (FIFO)
 // -------------------------------
-class Batch {
+class Batch { // lô thuốc
     String batchId;
     Medicine medicine;
     LocalDate expiryDate;
@@ -131,7 +131,7 @@ class LegacyCSVGenerator {
 public class PharmacySimulator {
     public static void main(String[] args) throws Exception {
         // 1. Generate legacy CSV (>10k rows)
-        LegacyCSVGenerator.generate("legacy_batches.csv", 12000);
+        LegacyCSVGenerator.generate("legacy_batches.csv", 10000);
         System.out.println("Legacy CSV generated: legacy_batches.csv");
 
         // 2. Sample medicines
