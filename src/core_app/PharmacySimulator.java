@@ -4,10 +4,16 @@
 // Includes: Domain model + Legacy CSV data generator (>10,000 rows)
 // ===============================
 
-import java.io.*;
-import java.time.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Random;
 
 // -------------------------------
 // ENTITY: Medicine
@@ -37,7 +43,7 @@ class Medicine {
 // -------------------------------
 // ENTITY: Batch (FIFO)
 // -------------------------------
-class Batch {
+class Batch { // lô thuốc
     String batchId;
     Medicine medicine;
     LocalDate expiryDate;
@@ -69,7 +75,7 @@ class Inventory {
     public int sell(String medicineId, int quantityVien) {
         int sold = 0;
         PriorityQueue<Batch> pq = stock.get(medicineId);
-        if (pq == null) return 0;
+        if (pq == null) return 1;
 
         while (!pq.isEmpty() && sold < quantityVien) {
             Batch b = pq.peek();
@@ -125,7 +131,7 @@ class LegacyCSVGenerator {
 public class PharmacySimulator {
     public static void main(String[] args) throws Exception {
         // 1. Generate legacy CSV (>10k rows)
-        LegacyCSVGenerator.generate("legacy_batches.csv", 12000);
+        LegacyCSVGenerator.generate("legacy_batches.csv", 10000);
         System.out.println("Legacy CSV generated: legacy_batches.csv");
 
         // 2. Sample medicines
