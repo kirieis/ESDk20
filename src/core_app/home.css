@@ -481,6 +481,8 @@ body {
   /* Ensure equal height in grid */
   transition: all 0.3s ease;
   box-shadow: var(--shadow-sm);
+  position: relative;
+  /* For absolute positioning of tags */
 }
 
 .card:hover {
@@ -494,10 +496,17 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 12px;
   flex-grow: 1;
   /* Push other elements to bottom */
   background: linear-gradient(180deg, var(--cream) 0%, var(--white) 100%);
+}
+
+.card__top>div:first-child {
+  flex: 1;
+  min-width: 0;
+  margin-right: 0;
+  padding-right: 60px;
+  /* Make space for absolute tag */
 }
 
 .card__name {
@@ -513,18 +522,39 @@ body {
   font-size: 13px;
   color: var(--text-muted);
   margin-top: 6px;
+  line-height: 1.6;
+}
+
+.card__meta .line {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tag {
   font-family: var(--font-heading);
   font-size: 11px;
   font-weight: 700;
-  padding: 6px 12px;
+  padding: 6px 4px;
   border-radius: 50px;
   background: var(--light-bg);
   color: var(--primary);
   border: 1px solid var(--border);
   white-space: nowrap;
+
+  /* Standardize size */
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 72px;
+}
+
+.card__top .tag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  margin: 0;
 }
 
 .tag--sale {
@@ -546,6 +576,10 @@ body {
   font-size: 20px;
   font-weight: 800;
   color: var(--primary);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .price del {

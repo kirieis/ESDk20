@@ -215,8 +215,8 @@ function productCard(p) {
         <div>
           <h3 class="card__name">${escapeHtml(p.name)}</h3>
           <div class="card__meta">
-            Mã: <b>${escapeHtml(p.id)}</b> • Lô: <b>${escapeHtml(p.batchId)}</b><br/>
-            CN: <b>${escapeHtml(p.store)}</b> • Ngày: <b>${escapeHtml(p.date)}</b>
+            <div class="line">Mã: <b>${escapeHtml(p.id)}</b> • Lô: <b>${escapeHtml(p.batchId)}</b></div>
+            <div class="line">CN: <b>${escapeHtml(p.store)}</b> • Date: <b>${escapeHtml(p.date)}</b></div>
           </div>
         </div>
         ${saleTag}
