@@ -1,5 +1,7 @@
 package core_app.model;
 
+import core_app.model.MedicineGroup; 
+
 public class Medicine {
 
     private int medicineId;

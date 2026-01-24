@@ -1,5 +1,6 @@
 package core_app.model;
 
+import core_app.model.Medicine;
 import java.time.LocalDate;
 
 public class Batch {
