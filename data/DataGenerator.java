@@ -27,7 +27,7 @@ public class DataGenerator {
             String batch = letter + String.valueOf(num);
             String expiry = error ? "invalid-date"
                     : LocalDate.now().plusDays(r.nextInt(500) - 200).toString();
-            int qty = error ? -5 : r.nextInt(200) + 1;
+            int qty = error ? -r.nextInt(100) : r.nextInt(200) + 1;
 
             fw.write(id + "," + name + "," + batch + "," + expiry + "," + qty + "\n");
         }
