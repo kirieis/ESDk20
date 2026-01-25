@@ -8,12 +8,23 @@ public class DataGenerator {
         FileWriter fw = new FileWriter("medicines_raw.csv"); // 10000 raw records with bugs
         fw.write("medicine_id,name,batch,expiry,quantity\n");
 
+        String[] medicines = {
+            "Paracetamol",
+            "Aspirin",
+            "Amoxicillin",
+            "Ibuprofen",
+            "Cefixime",
+            "Vitamin C"
+    };
+
         Random r = new Random();
         for (int i = 1; i <= 10000; i++) {
             boolean error = r.nextInt(100) < 8; // ~8% lỗi
             String id = error ? "" : "MED" + i;
-            String name = error ? "###" : "Paracetamol";
-            String batch = "B" + (i % 50);
+            String name = error ? "###" : medicines[r.nextInt(medicines.length)];
+            char letter = (char) ('A' + r.nextInt(26));
+            int num = r.nextInt(1000); // 0–999
+            String batch = letter + String.valueOf(num);
             String expiry = error ? "invalid-date"
                     : LocalDate.now().plusDays(r.nextInt(500) - 200).toString();
             int qty = error ? -5 : r.nextInt(200) + 1;
