@@ -23,7 +23,7 @@ public class DataGenerator {
             String id = error ? "" : "MED" + i;
             String name = error ? "###" : medicines[r.nextInt(medicines.length)];
             char letter = (char) ('A' + r.nextInt(26));
-            int num = r.nextInt(1000); // 0–999
+            int num = r.nextInt(100); // 0–99
             String batch = letter + String.valueOf(num);
             String expiry = error ? "invalid-date"
                     : LocalDate.now().plusDays(r.nextInt(500) - 200).toString();
