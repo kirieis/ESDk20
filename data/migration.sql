@@ -36,7 +36,7 @@ CREATE TABLE Medicine (
    IMPORT MEDICINE DATA
    ========================= */
 BULK INSERT Medicine
-FROM 'E:\Project-LAB-github\lab211-project-group1\data\medicines_clean_9500.csv'
+FROM 'E:\Project-LAB-github\lab211-project-group1\data\medicines_clean.csv'
 WITH (
     FIRSTROW = 2,
     FIELDTERMINATOR = ',',
