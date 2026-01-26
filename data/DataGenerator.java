@@ -9,13 +9,13 @@ public class DataGenerator {
         fw.write("medicine_id,name,batch,expiry,quantity\n");
 
         String[] medicines = {
-            "Paracetamol",
-            "Aspirin",
-            "Amoxicillin",
-            "Ibuprofen",
-            "Cefixime",
-            "Vitamin_C"
-    };
+                "Paracetamol_500mg",
+                "Aspirin_500mg",
+                "Amoxicillin_500mg",
+                "Ibuprofen_200mg",
+                "Cefixime_200mg",
+                "Vitamin_C"
+        };
 
         Random r = new Random();
         for (int i = 1; i <= 10000; i++) {

@@ -14,14 +14,12 @@
     <div class="header__inner container">
       <div class="brand">
         <div class="brand__logo" aria-label="Github logo">
-          <!-- Logo dạng “placeholder”, bạn thay bằng svg/logo thật -->
           <span class="logo-dot"></span>
           <span class="logo-dot"></span>
           <span class="logo-dot"></span>
         </div>
         <div class="brand__text">
           <div class="brand__name">Github Pharmacy</div>
-
         </div>
       </div>
 
@@ -49,6 +47,7 @@
     <section class="hero">
       <div class="hero__left">
         <h1>Mua thuốc nhanh – tìm dễ – lọc chuẩn</h1>
+        <p>Cập nhật trực tiếp từ hệ thống quản lý kho.</p>
         <div class="hero__cta">
           <button class="btn btn--primary" id="btnGoSale">Xem Sale 🔥</button>
           <button class="btn btn--ghost" id="btnGoAll">Xem toàn bộ</button>
@@ -69,7 +68,7 @@
     <section id="saleSection" class="section">
       <div class="section__head">
         <h2>Đang Sale</h2>
-        <p class="muted">Các sản phẩm giảm giá </p>
+        <p class="muted">Các sản phẩm giảm giá hấp dẫn</p>
       </div>
       <div id="saleGrid" class="grid"></div>
       <div id="saleEmpty" class="empty hidden">Chưa có sản phẩm sale theo bộ lọc hiện tại.</div>
@@ -79,7 +78,7 @@
     <section id="bestSection" class="section">
       <div class="section__head">
         <h2>Best Seller</h2>
-        <p class="muted">Sản phẩm được ưa chuộng </p>
+        <p class="muted">Sản phẩm được ưa chuộng nhất</p>
       </div>
       <div id="bestGrid" class="grid"></div>
       <div id="bestEmpty" class="empty hidden">Chưa có best seller theo bộ lọc hiện tại.</div>
@@ -90,7 +89,6 @@
       <div class="section__head section__head--row">
         <div>
           <h2>Tất cả sản phẩm</h2>
-
         </div>
         <div class="pill" id="resultCount">0 kết quả</div>
       </div>
@@ -102,7 +100,7 @@
 
           <label class="field">
             <span>Từ khoá</span>
-            <input id="filterQuery" type="text" placeholder="VD: Thuoc_M35 / M35 / CN5" />
+            <input id="filterQuery" type="text" placeholder="Tên thuốc, mã, lô..." />
           </label>
 
           <label class="field">
@@ -114,12 +112,12 @@
 
           <label class="field">
             <span>Giá (min)</span>
-            <input id="filterMin" type="number" min="0" step="100" placeholder="0" />
+            <input id="filterMin" type="number" min="0" step="1000" placeholder="0" />
           </label>
 
           <label class="field">
             <span>Giá (max)</span>
-            <input id="filterMax" type="number" min="0" step="100" placeholder="" />
+            <input id="filterMax" type="number" min="0" step="1000" placeholder="" />
           </label>
 
           <label class="field">
@@ -142,12 +140,6 @@
             <button id="btnReset" class="btn btn--ghost">Reset</button>
             <button id="btnApply" class="btn btn--primary">Áp dụng</button>
           </div>
-
-          <hr class="sep" />
-
-          <div class="muted small">
-
-          </div>
         </aside>
 
         <!-- PRODUCTS -->
@@ -168,7 +160,6 @@
     </section>
   </main>
 
-  <!-- FOOTER -->
   <footer class="footer">
     <div class="container footer__inner">
       Connect with us : 03xxxxxxx

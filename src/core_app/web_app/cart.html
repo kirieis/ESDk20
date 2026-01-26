@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Giỏ hàng - Github Pharmacy</title>
+    <link rel="stylesheet" href="home.css" />
+    <style>
+        .cart-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 0.5fr;
+            gap: 28px;
+        }
+
+        .cart-items {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: 1fr auto auto auto;
+            gap: 20px;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item__info h3 {
+            font-size: 16px;
+            color: var(--primary);
+        }
+
+        .cart-item__info p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .cart-item__qty {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .qty-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--light-bg);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .cart-summary {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 100px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .summary-total {
+            border-top: 1px solid var(--border);
+            padding-top: 12px;
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header__inner container">
+            <div class="brand">
+                <a href="home.html" style="text-decoration: none; display: flex; gap: 14px; align-items: center;">
+                    <div class="brand__logo">
+                        <span class="logo-dot"></span>
+                        <span class="logo-dot"></span>
+                        <span class="logo-dot"></span>
+                    </div>
+                    <div class="brand__name">Github Pharmacy</div>
+                </a>
+            </div>
+            <div></div>
+            <div class="header__actions">
+                <a href="home.html" class="btn btn--ghost">Tiếp tục mua sắm</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container main">
+        <h1 style="margin-bottom: 24px; color: var(--primary);">Giỏ hàng của bạn</h1>
+
+        <div class="cart-grid">
+            <div class="cart-items" id="cartList">
+                <!-- Rendered by cart.js -->
+                <p class="muted">Đang tải giỏ hàng...</p>
+            </div>
+
+            <div class="cart-summary">
+                <h2 style="font-size: 18px; margin-bottom: 20px;">Tổng quát đơn hàng</h2>
+                <div class="summary-row">
+                    <span>Tạm tính</span>
+                    <span id="subtotal">0đ</span>
+                </div>
+                <div class="summary-row">
+                    <span>Phí vận chuyển</span>
+                    <span>Miễn phí</span>
+                </div>
+                <div class="summary-row summary-total">
+                    <span>Tổng cộng</span>
+                    <span id="totalPrice">0đ</span>
+                </div>
+                <button class="btn btn--primary" style="width: 100%; margin-top: 20px; justify-content: center;">
+                    XÁC NHẬN THANH TOÁN
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script src="cart.js"></script>
+</body>
+
+</html>

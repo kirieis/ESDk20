@@ -1,5 +1,5 @@
-// Github Pharmacy - Demo Frontend (HTML/CSS/JS)
-// Hỗ trợ: search + filter + sort + pagination, phù hợp 10k sản phẩm (render theo trang)
+// Github Pharmacy - Real Data Sync + Mock Pricing
+// Chế độ: Đọc trực tiếp từ /data/medicines_clean.csv (Tương thích Live Server)
 
 const state = {
   products: [],
@@ -21,92 +21,16 @@ const state = {
 const $ = (id) => document.getElementById(id);
 
 function formatVND(n) {
-  // n là number
   return n.toLocaleString("vi-VN") + "đ";
 }
 
 function clampNumber(val) {
-  // Return null for empty string or undefined/null values
   if (val === "" || val === null || val === undefined) return null;
   const num = Number(val);
   return Number.isFinite(num) ? num : null;
 }
 
-// -------- Mock dataset builder (khi bạn chưa nối DB) --------
-// Format medicines_clean.csv: medicine_id,name,batch,expiry,quantity
-function mockFromCSVLines(lines) {
-  const rows = [];
-  const errors = []; 
-
-  console.group("📝 IMPORT LOG: starting...");
-
-  lines.forEach((line, index) => {
-    const trimmed = line.trim();
-    if (!trimmed) return;
-    if (trimmed.startsWith("medicine_id") || trimmed.startsWith("id")) return;
-
-    const parts = trimmed.split(",");
-    
-    // Validate we have at least 5 columns
-    if (parts.length < 5) {
-      if (parts.length > 1) { // ignore empty lines
-          errors.push(`Line ${index + 1}: Malformed row (need 5 cols) -> "${trimmed}"`);
-      }
-      return;
-    }
-
-    // New Schema: medicine_id,name,batch,expiry,quantity
-    const [medId, name, batchId, dateStr, quantityStr] = parts;
-
-    // Basic Validation
-    if (!medId || !name) return;
-
-    const quantity = Number(quantityStr);
-    if (!Number.isFinite(quantity)) return;
-
-    // --- Data Mocking / Enrichment (Missing cols in CSV) ---
-    
-    // 1. Store/Branch (Randomly assign CN1, CN2, CN3, CN4, CN5)
-    // Hash medId to keep it consistent for the same product
-    const storeIdx = (hashString(medId) % 5) + 1;
-    const store = `CN${storeIdx}`;
-
-    // 2. Pricing
-    const price = 10000 + (hashString(medId) % 200) * 1000; // 10k - 210k
-    
-    // 3. Sale Logic
-    const hasSale = hashString(medId) % 5 === 0; // 20% chance
-    const discount = hasSale ? (5 + (hashString(name) % 26)) : 0; // 5-30%
-    const finalPrice = discount ? Math.round(price * (1 - discount / 100)) : price;
-
-    // 4. Popularity
-    const popularity = (hashString(name + batchId) % 1000) + 1;
-
-    rows.push({
-      id: medId,
-      batchId,
-      name,
-      date: dateStr,
-      price,
-      discount,
-      finalPrice,
-      store,
-      quantity,
-      popularity,
-    });
-  });
-
-  console.log(`✅ Import thành công: ${rows.length} dòng.`);
-  if (errors.length > 0) {
-    console.warn(`⚠️ Có ${errors.length} dòng bị lỗi/bỏ qua:`);
-  }
-  console.groupEnd();
-
-  return rows;
-}
-
 function hashString(s) {
-  // hash nhanh để mock ngẫu nhiên ổn định
   let h = 0;
   for (let i = 0; i < s.length; i++) {
     h = (h * 31 + s.charCodeAt(i)) >>> 0;
@@ -114,18 +38,68 @@ function hashString(s) {
   return h;
 }
 
+// -------- CSV Parser + Mock Pricing --------
+function parseCSV(text) {
+  const lines = text.split("\n");
+  const rows = [];
+
+  lines.forEach((line, index) => {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("medicine_id")) return;
+
+    const parts = trimmed.split(",");
+    if (parts.length < 5) return;
+
+    const [medId, name, batchId, dateStr, quantityStr] = parts;
+    const quantity = Number(quantityStr);
+
+    if (!medId || !name) return;
+
+    // --- Mocking Pricing & Sale (Deterministic based on medId) ---
+    const h = hashString(medId);
+    const price = 10000 + (h % 200) * 1000; // 10k - 210k
+    const storeIdx = (h % 5) + 1;
+    const store = `CN${storeIdx}`;
+
+    const hasSale = h % 5 === 0; // 20% chance
+    const discount = hasSale ? (5 + (hashString(name) % 26)) : 0;
+    const finalPrice = discount ? Math.round(price * (1 - discount / 100)) : price;
+    const popularity = (hashString(name + batchId) % 1000) + 1;
+
+    rows.push({
+      id: medId,
+      name: name.replaceAll("_", " "),
+      batchId,
+      date: dateStr,
+      quantity: isNaN(quantity) ? 0 : quantity,
+      price,
+      discount,
+      finalPrice,
+      store,
+      popularity
+    });
+  });
+
+  return rows;
+}
+
 // -------- CSV Loader --------
-// Load từ file medicines_clean.csv (đã copy vào webapp)
 async function loadProducts() {
   try {
-    const res = await fetch("./medicines_clean.csv", { cache: "no-store" });
-    if (!res.ok) throw new Error("No CSV found");
+    // Relative path used because Live Server root varies, but usually it's project root
+    // Try absolute from root first
+    const res = await fetch("/data/medicines_clean.csv", { cache: "no-store" });
+    if (!res.ok) {
+      // Fallback for different Live Server configurations
+      const fallbackRes = await fetch("../../../data/medicines_clean.csv", { cache: "no-store" });
+      if (!fallbackRes.ok) throw new Error("CSV Not Found");
+      const text = await fallbackRes.text();
+      return parseCSV(text);
+    }
     const text = await res.text();
-    const lines = text.split("\n");
-    return mockFromCSVLines(lines);
+    return parseCSV(text);
   } catch (e) {
-    console.error("Failed to load CSV:", e);
-    // fallback: clean array if failed
+    console.error("Failed to load medicines:", e);
     return [];
   }
 }
@@ -208,7 +182,7 @@ function productCard(p) {
           <h3 class="card__name">${escapeHtml(p.name)}</h3>
           <div class="card__meta">
             <div class="line">Mã: <b>${escapeHtml(p.id)}</b> • Lô: <b>${escapeHtml(p.batchId)}</b></div>
-            <div class="line">CN: <b>${escapeHtml(p.store)}</b> • Date: <b>${escapeHtml(p.date)}</b></div>
+            <div class="line">CN: <b>${escapeHtml(p.store)}</b> • HSD: <b>${escapeHtml(p.date)}</b></div>
           </div>
         </div>
         ${saleTag}
@@ -216,7 +190,13 @@ function productCard(p) {
 
       <div class="card__mid">
         ${priceHtml}
-        <span class="tag">★ ${p.popularity}</span>
+        <div class="unit-selector">
+          <select class="field-select unit-input" data-id="${p.id}">
+            <option value="Viên">Viên</option>
+            <option value="Vỉ">Vỉ</option>
+            <option value="Hộp">Hộp</option>
+          </select>
+        </div>
       </div>
 
       <div class="card__actions">
@@ -237,32 +217,13 @@ function escapeHtml(str) {
 }
 
 function renderSale(filtered) {
-  // Deduplicate by medicine ID - keep only best batch per medicine
-  const seen = new Set();
-  const uniqueSale = filtered
-    .filter(p => p.discount > 0)
-    .sort((a, b) => b.popularity - a.popularity)
-    .filter(p => {
-      if (seen.has(p.id)) return false;
-      seen.add(p.id);
-      return true;
-    })
-    .slice(0, 8);
+  const uniqueSale = filtered.filter(p => p.discount > 0).slice(0, 8);
   $("saleGrid").innerHTML = uniqueSale.map(productCard).join("");
   $("saleEmpty").classList.toggle("hidden", uniqueSale.length > 0);
 }
 
 function renderBest(filtered) {
-  // Deduplicate by medicine ID - keep only best batch per medicine
-  const seen = new Set();
-  const uniqueBest = [...filtered]
-    .sort((a, b) => b.popularity - a.popularity)
-    .filter(p => {
-      if (seen.has(p.id)) return false;
-      seen.add(p.id);
-      return true;
-    })
-    .slice(0, 8);
+  const uniqueBest = [...filtered].sort((a, b) => b.popularity - a.popularity).slice(0, 8);
   $("bestGrid").innerHTML = uniqueBest.map(productCard).join("");
   $("bestEmpty").classList.toggle("hidden", uniqueBest.length > 0);
 }
@@ -282,40 +243,82 @@ function renderAll(filtered) {
 }
 
 function renderAllSections() {
-  const filtered = applyFilters(state.products);
-
-  // Create deduplicated list for display (keep best batch per medicine ID)
   const seen = new Set();
-  const uniqueFiltered = [...filtered]
-    .sort((a, b) => b.popularity - a.popularity)
-    .filter(p => {
-      if (seen.has(p.id)) return false;
-      seen.add(p.id);
-      return true;
-    });
+  const uniqueProducts = state.products.filter(p => {
+    if (seen.has(p.id)) return false;
+    seen.add(p.id);
+    return true;
+  });
 
-  renderSale(uniqueFiltered);
-  renderBest(uniqueFiltered);
-  renderAll(uniqueFiltered);
+  const filtered = applyFilters(uniqueProducts);
+  renderSale(filtered);
+  renderBest(filtered);
+  renderAll(filtered);
 }
 
 // -------- Events --------
 function bindEvents() {
-  // Cart buttons (event delegation)
+  const getCart = () => JSON.parse(localStorage.getItem("cart") || "[]");
+  const saveCart = (cart) => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+    $("cartBadge").textContent = String(cart.reduce((sum, item) => sum + item.qty, 0));
+  };
+
+  // Set initial badge
+  saveCart(getCart());
+
   document.body.addEventListener("click", (e) => {
     const buyId = e.target?.getAttribute?.("data-buy");
     const addId = e.target?.getAttribute?.("data-add");
 
     if (buyId || addId) {
-      state.cartCount += 1;
-      $("cartBadge").textContent = String(state.cartCount);
+      const id = buyId || addId;
+      const product = state.products.find((p) => p.id === id);
+      const unit = document.querySelector(`.unit-input[data-id="${id}"]`)?.value || "Viên";
+
+      let cart = getCart();
+      const existing = cart.find(item => item.id === id && item.unit === unit);
+
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({
+          id: product.id,
+          name: product.name,
+          price: product.finalPrice,
+          unit: unit,
+          qty: 1
+        });
+      }
+
+      saveCart(cart);
+      showToast(product.name);
+
+      if (buyId) {
+        window.location.href = "cart.html";
+      }
       return;
     }
   });
 
-  // Header search -> sync filterQuery + apply
+  $("btnCart").addEventListener("click", () => {
+    window.location.href = "cart.html";
+  });
+
+  function showToast(msg) {
+    let t = $("toast");
+    if (!t) {
+      t = document.createElement("div");
+      t.id = "toast";
+      t.className = "toast";
+      document.body.appendChild(t);
+    }
+    t.innerHTML = `🛒 <span>${msg}</span> đã được thêm vào giỏ!`;
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 3000);
+  }
+
   $("btnSearch").addEventListener("click", () => {
-    $("filterQuery").value = $("globalSearch").value;
     state.query = $("globalSearch").value;
     state.page = 1;
     renderAllSections();
@@ -326,7 +329,6 @@ function bindEvents() {
     if (e.key === "Enter") $("btnSearch").click();
   });
 
-  // Apply + Reset
   $("btnApply").addEventListener("click", () => {
     syncFiltersFromUI();
     state.page = 1;
@@ -340,7 +342,6 @@ function bindEvents() {
     renderAllSections();
   });
 
-  // Pagination
   $("prevPage").addEventListener("click", () => {
     state.page = Math.max(1, state.page - 1);
     renderAllSections();
@@ -353,7 +354,6 @@ function bindEvents() {
     scrollToAll();
   });
 
-  // Debounce typing for filterQuery (đỡ giật)
   const debounced = debounce(() => {
     syncFiltersFromUI();
     state.page = 1;
@@ -372,33 +372,42 @@ function bindEvents() {
     });
   });
 
-  // CTA
-  $("btnGoSale").addEventListener("click", () => {
-    document.getElementById("saleSection").scrollIntoView({ behavior: "smooth" });
-  });
   $("btnGoAll").addEventListener("click", () => scrollToAll());
 
-  // Login mock
-  // Login / Auth logic
+  // Auth logic
   const authState = window.authState || { isLoggedIn: false };
   const btnLogin = $("btnLogin");
-
   if (authState.isLoggedIn) {
     btnLogin.innerHTML = `👤 ${escapeHtml(authState.fullName)} (Đăng xuất)`;
-    btnLogin.addEventListener("click", () => {
-      // Logout
-      window.location.href = "logout";
-    });
+    btnLogin.addEventListener("click", () => { window.location.href = "logout"; });
   } else {
     btnLogin.innerHTML = `👤 Đăng nhập`;
-    btnLogin.addEventListener("click", () => {
-      window.location.href = "login";
-    });
+    btnLogin.addEventListener("click", () => { window.location.href = "login"; });
   }
 
   $("btnCart").addEventListener("click", () => {
-    alert(`Giỏ hàng demo: ${state.cartCount} sản phẩm (bạn tự nối DB/cart sau).`);
+    alert(`Giỏ hàng: ${state.cartCount} sản phẩm.`);
   });
+}
+
+function syncFiltersFromUI() {
+  state.query = $("filterQuery").value || "";
+  state.branch = $("filterBranch").value || "";
+  state.min = $("filterMin").value || "";
+  state.max = $("filterMax").value || "";
+  state.sort = $("filterSort").value || "pop_desc";
+  state.onlySale = $("filterOnlySale").checked;
+  $("globalSearch").value = state.query;
+}
+
+function resetFiltersUI() {
+  $("filterQuery").value = "";
+  $("filterBranch").value = "";
+  $("filterMin").value = "";
+  $("filterMax").value = "";
+  $("filterSort").value = "pop_desc";
+  $("filterOnlySale").checked = false;
+  $("globalSearch").value = "";
 }
 
 function scrollToAll() {
@@ -413,31 +422,10 @@ function debounce(fn, ms) {
   };
 }
 
-function syncFiltersFromUI() {
-  state.query = $("filterQuery").value || "";
-  state.branch = $("filterBranch").value || "";
-  state.min = $("filterMin").value || "";
-  state.max = $("filterMax").value || "";
-  state.sort = $("filterSort").value || "pop_desc";
-  state.onlySale = $("filterOnlySale").checked;
-
-  // sync header search (cho đồng bộ)
-  $("globalSearch").value = state.query;
-}
-
-function resetFiltersUI() {
-  $("filterQuery").value = "";
-  $("filterBranch").value = "";
-  $("filterMin").value = "";
-  $("filterMax").value = "";
-  $("filterSort").value = "pop_desc";
-  $("filterOnlySale").checked = false;
-  $("globalSearch").value = "";
-}
-
 function fillBranches(products) {
-  const branches = [...new Set(products.map(p => p.store))].sort((a, b) => a.localeCompare(b, "vi"));
+  const branches = [...new Set(products.map(p => p.store))].sort();
   const sel = $("filterBranch");
+  sel.innerHTML = '<option value="">Tất cả</option>';
   for (const b of branches) {
     const opt = document.createElement("option");
     opt.value = b;
@@ -448,15 +436,10 @@ function fillBranches(products) {
 
 // -------- Boot --------
 (async function init() {
-  // Check Login Status
   try {
     const authRes = await fetch("api/auth-status");
-    if (authRes.ok) {
-      window.authState = await authRes.json();
-    }
-  } catch (e) {
-    console.error("Auth check failed", e);
-  }
+    if (authRes.ok) window.authState = await authRes.json();
+  } catch (e) { }
 
   state.products = await loadProducts();
   fillBranches(state.products);

@@ -590,6 +590,27 @@ body {
   margin-left: 10px;
 }
 
+.unit-selector {
+  flex: 1;
+}
+
+.unit-input {
+  width: 100%;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--light-bg);
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text-dark);
+  outline: none;
+  cursor: pointer;
+}
+
+.unit-input:focus {
+  border-color: var(--gold);
+}
+
 .card__actions {
   padding: 0 20px 20px;
   display: flex;
@@ -976,4 +997,34 @@ body {
     font-size: 14px;
     padding: 12px 0;
   }
+}
+
+/* === TOAST NOTIFICATION === */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: var(--primary);
+  color: var(--white);
+  padding: 16px 24px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 1000;
+  border: 1px solid var(--border-gold);
+}
+
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.toast span {
+  font-weight: 600;
+  color: var(--gold-light);
 }
