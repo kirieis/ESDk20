@@ -1,49 +1,82 @@
 package core_app.model;
 
-import core_app.model.Medicine;
 import java.time.LocalDate;
 
-public class Batch {
+public class Batch implements Comparable<Batch> {
 
-    private int batchId;
+    private String batchId;
     private String batchNumber;
     private LocalDate manufactureDate;
     private LocalDate expiryDate;
 
-    private int quantity; 
+    private int vienPerVi;
+    private int viPerHop;
+    private int hopPerThung;
 
-    private Medicine medicine; 
+    private int totalVien;
+
+    private Medicine medicine;
 
     public Batch() {
     }
 
-    public Batch(int batchId, String batchNumber,
-                 LocalDate manufactureDate, LocalDate expiryDate,
-                 int quantity, Medicine medicine) {
+    public Batch(String batchId,
+                 String batchNumber,
+                 LocalDate manufactureDate,
+                 LocalDate expiryDate,
+                 int vienPerVi,
+                 int viPerHop,
+                 int hopPerThung,
+                 int totalVien,
+                 Medicine medicine) {
         this.batchId = batchId;
         this.batchNumber = batchNumber;
         this.manufactureDate = manufactureDate;
         this.expiryDate = expiryDate;
-        this.quantity = quantity;
+        this.vienPerVi = vienPerVi;
+        this.viPerHop = viPerHop;
+        this.hopPerThung = hopPerThung;
+        this.totalVien = totalVien;
         this.medicine = medicine;
     }
-
-    // ===== Business Method =====
 
     public boolean isExpired() {
         return expiryDate.isBefore(LocalDate.now());
     }
 
-    public void deductQuantity(int amount) {
-        if (amount > quantity) {
-            throw new IllegalArgumentException("Not enough stock in batch");
-        }
-        this.quantity -= amount;
+    public boolean isSellable() {
+        return !isExpired() && totalVien > 0;
     }
 
-    // ===== Getter & Setter =====
+    @Override
+    public int compareTo(Batch other) {
+        return this.expiryDate.compareTo(other.expiryDate);
+    }
 
-    public int getBatchId() {
+    public int convertToVien(int quantity, UnitType unitType) {
+        switch (unitType) {
+            case VIEN:
+                return quantity;
+            case VI:
+                return quantity * vienPerVi;
+            case HOP:
+                return quantity * viPerHop * vienPerVi;
+            case THUNG:
+                return quantity * hopPerThung * viPerHop * vienPerVi;
+            default:
+                throw new IllegalArgumentException("Invalid unit type");
+        }
+    }
+
+    public void deductStock(int quantity, UnitType unitType) {
+        int vien = convertToVien(quantity, unitType);
+        if (vien > totalVien) {
+            throw new IllegalArgumentException("Not enough stock in batch");
+        }
+        totalVien -= vien;
+    }
+
+    public String getBatchId() {
         return batchId;
     }
 
@@ -59,8 +92,8 @@ public class Batch {
         return expiryDate;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getTotalVien() {
+        return totalVien;
     }
 
     public Medicine getMedicine() {
