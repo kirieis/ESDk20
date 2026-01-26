@@ -14,7 +14,11 @@ public class DataGenerator {
                 "Amoxicillin_500mg",
                 "Ibuprofen_200mg",
                 "Cefixime_200mg",
-                "Vitamin_C"
+                "Vitamin_C",
+                "Meloxicam 7.5mg",
+                "Cefdinir 300mg",
+                "SkillMax Ocavill",
+                "Siro Ginkid ZinC",
         };
 
         Random r = new Random();
