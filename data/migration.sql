@@ -31,7 +31,11 @@ CREATE TABLE Medicine (
 /* =========================
    IMPORT MEDICINE DATA
    ========================= */
-BULK INSERT Medicine
+--Nguyen_Van_An path:E:\Project-LAB-github\lab211-project-group1\data\medicines_clean.csv--
+--enter your path here--
+--enter your path here--
+--enter your path here--
+BULK INSERT Medicine 
 FROM 'E:\Project-LAB-github\lab211-project-group1\data\medicines_clean.csv'
 WITH (
     FIRSTROW = 2,
