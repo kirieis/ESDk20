@@ -179,7 +179,7 @@ public class DataGenerator {
     } else if (dosageForm.equals("Syrup")) {
         basePrice = 50000;
     } else {
-        basePrice = 20000;
+        basePrice = 8500;
     }
 
             String expiry = error ? "invalid-date"
