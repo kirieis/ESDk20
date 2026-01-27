@@ -33,7 +33,7 @@ CREATE TABLE Medicine (
    ========================= */
 --Nguyen_Van_An path:E:\Project-LAB-github\lab211-project-group1\data\medicines_clean.csv--
 --Tran Quoc Thinh path:C:\Users\PC\Documents\GitHub\project_group1\data\medicines_clean.csv--
---enter your path here--
+--Nguyen Tri Thien path: C:\Users\nguye\Documents\GitHub\lab211-project-group1\data--
 --enter your path here--
 BULK INSERT Medicine 
 FROM 'E:\Project-LAB-github\lab211-project-group1\data\medicines_clean.csv'
