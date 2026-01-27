@@ -177,7 +177,7 @@ public class DataGenerator {
     } else if (name.contains("Augmentin")) {
         basePrice = 2400;
     } else if (dosageForm.equals("Syrup")) {
-        basePrice = 5000;
+        basePrice = 50000;
     } else {
         basePrice = 8500;
     }
