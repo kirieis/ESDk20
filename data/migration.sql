@@ -23,9 +23,15 @@ GO
 CREATE TABLE Medicine (
     medicine_id VARCHAR(20) PRIMARY KEY,
     name NVARCHAR(100) NOT NULL,
-    batch VARCHAR(100),
+    batch VARCHAR(250),
+    ingredient NVARCHAR(100),
+    dosage_form NVARCHAR(50),
+    strength NVARCHAR(20),
+    unit NVARCHAR(10),
+    manufacturer NVARCHAR(100),
     expiry DATE,
-    quantity INT CHECK (quantity >= 0)
+    quantity INT CHECK (quantity >= 0),
+    base_price DECIMAL(10,2)
 );
 
 /* =========================
@@ -33,8 +39,8 @@ CREATE TABLE Medicine (
    ========================= */
 --Nguyen_Van_An path:E:\Project-LAB-github\lab211-project-group1\data\medicines_clean.csv--
 --Tran Quoc Thinh path:C:\Users\PC\Documents\GitHub\project_group1\data\medicines_clean.csv--
---enter your path here--
---enter your path here--
+--Nguyen Tri Thien path: C:\Users\nguye\Documents\GitHub\lab211-project-group1\data\medicines_clean.csv--
+--Hang Vo Minh Nhat path: C:\Users\nhatg\Documents\GitHub\lab211-project-group1\data\medicines_clean.csv--
 BULK INSERT Medicine 
 FROM 'E:\Project-LAB-github\lab211-project-group1\data\medicines_clean.csv'
 WITH (

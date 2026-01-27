@@ -20,7 +20,7 @@ public class DataCleaner {
                 if (p[1].equals("###")) continue;
                 if (p[3].equals("unknown ingredient")) continue;
                 if (Integer.parseInt(p[5]) <= 0) continue;
-                LocalDate.parse(p[4]);
+                LocalDate.parse(p[10]);
                 fw.write(line + "\n");
             } catch (Exception ignored) {}
         }
