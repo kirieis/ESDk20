@@ -47,12 +47,16 @@ public class DataGenerator {
             boolean erroringredient = r.nextInt(100) < 8;
             boolean errorexpiry = r.nextInt(100) < 8;
             boolean errorqty = r.nextInt(100) < 8;
-            boolean errorddosage = r.nextInt(100) < 8;
 
             String id = errorid ? "" : "MED" + i;
             String name = errorname ? "###" : medicines[r.nextInt(medicines.length)];
 
-            String batch = (char) ('A' + r.nextInt(26)) + String.valueOf(r.nextInt(100));
+            String batch;
+			if(errorbatch){
+				batch = "???";
+			} else {
+				batch = (char) ('A' + r.nextInt(26)) + String.valueOf(r.nextInt(100));
+			}
 
             // default values
             String ingredient = "unknown";
