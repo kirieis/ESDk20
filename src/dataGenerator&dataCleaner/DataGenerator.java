@@ -7,7 +7,7 @@ public class DataGenerator {
 
     public static void main(String[] args) throws Exception {
         FileWriter fw = new FileWriter("medicines_raw.csv");
-        fw.write("medicine_id,name,batch,ingredient,dosage_form,strength,unit,manufacturer,price,requires_prescription,expiry,quantity\n");
+        fw.write("medicine_id,name,batch,ingredient,dosage_form,strength,unit,manufacturer,expiry,quantity,price\n");
 
         String[] medicines = {
                 "Paracetamol_500mg",
@@ -40,13 +40,14 @@ public class DataGenerator {
 
         Random r = new Random();
 
-        for (int i = 1; i <= 15000; i++) {
+        for (int i = 1; i <= 35000; i++) {
             boolean errorid = r.nextInt(100) < 8;
             boolean errorname = r.nextInt(100) < 8;
             boolean errorbatch = r.nextInt(100) < 8;
-            boolean erroringredient = r.nextInt(100) < 8;
             boolean errorexpiry = r.nextInt(100) < 8;
             boolean errorqty = r.nextInt(100) < 8;
+			boolean errorprice = r.nextInt(100) < 8;
+
 
             String id = errorid ? "" : "MED" + i;
             String name = errorname ? "###" : medicines[r.nextInt(medicines.length)];
@@ -201,8 +202,10 @@ public class DataGenerator {
 		}
 
 
-     double basePrice = 2500;
-
+    int basePrice;
+	 if(errorprice){
+		basePrice = -r.nextInt(5000);
+	 } else {
     if (name.contains("Paracetamol") || name.contains("Hapacol")) {
         basePrice = 700;
     } else if (name.contains("Ibuprofen") || name.contains("Aspirin")) {
@@ -215,7 +218,10 @@ public class DataGenerator {
         basePrice = 2400;
     } else if (dosageForm.equals("Syrup")) {
         basePrice = 50000;
-    }
+    }else{
+		basePrice = 1500;
+	}
+}
 
             String expiry = errorexpiry ? "invalid-date"
                     : LocalDate.now().plusDays(r.nextInt(500) - 200).toString();
