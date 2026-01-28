@@ -14801,3 +14801,635 @@ Nếu bạn muốn 👉
 ✅ hoặc giải thích theo kiểu “trả lời thi Database / Java Web”,
 nói mình biết mục đích nha, mình làm đúng trọng tâm cho bạn luôn 👌
 
+AI logs 28/1:
+
+Skip to content
+Chat history
+
+
+
+
+You said:
+if (name.equals("Paracetamol_500mg")) {
+                ingredient = "Paracetamol";
+                manufacturer = "Sanofi";
+            } else if (name.equals("Aspirin_500mg")) {
+                ingredient = "Aspirin";
+                manufacturer = "Bayer";
+            } else if (name.equals("Amoxicillin_500mg")) {
+                ingredient = "Amoxicillin";
+                dosageForm = "Capsule";
+                manufacturer = "GSK";
+            } else if (name.equals("Ibuprofen_200mg")) {
+                ingredient = "Ibuprofen";
+                strength = "200";
+                manufacturer = "Abbott";
+            } else if (name.equals("Cefixime_200mg")) {
+                ingredient = "Cefixime";
+                dosageForm = "Capsule";
+                strength = "200";
+                manufacturer = "Imexpharm";
+            } else if (name.equals("Vitamin_C")) {
+                ingredient = "Ascorbic Acid";
+                manufacturer = "DHG Pharma";
+            } else if (name.equals("Meloxicam_7.5mg")) {
+                ingredient = "Meloxicam";
+                strength = "7.5";
+                manufacturer = "Sanofi";
+            } else if (name.equals("Cefdinir_300mg")) {
+                ingredient = "Cefdinir";
+                dosageForm = "Capsule";
+                strength = "300";
+                manufacturer = "Pfizer";
+            } else if (name.equals("SkillMax_Ocavill")) {
+                ingredient = "Multivitamin";
+                dosageForm = "Syrup";
+                strength = "10";
+                unit = "ml";
+            } else if (name.equals("Siro_Ginkid_ZinC")) {
+                ingredient = "Zinc + Vitamin";
+                dosageForm = "Syrup";
+                strength = "10";
+                unit = "ml";
+            } else if (name.equals("Echina_Kingphar")) {
+                ingredient = "Echinacea";
+                manufacturer = "Kingphar";
+            } else if (name.equals("Panadol_Extra")) {
+                ingredient = "Paracetamol + Caffeine";
+                manufacturer = "GSK";
+            } else if (name.equals("Efferalgan_500mg")) {
+                ingredient = "Paracetamol";
+                manufacturer = "UPSA";
+            } else if (name.equals("Hapacol_650")) {
+                ingredient = "Paracetamol";
+                strength = "650";
+                manufacturer = "DHG Pharma";
+            } else if (name.equals("Alphachoay")) {
+                ingredient = "Alpha chymotrypsin";
+                unit = "IU";
+                strength = "4200";
+            } else if (name.equals("Augmentin_625mg")) {
+                ingredient = "Amoxicillin + Clavulanate";
+                strength = "625";
+                manufacturer = "GSK";
+            } else if (name.equals("Cefuroxim_500mg")) {
+                ingredient = "Cefuroxime";
+                manufacturer = "Sandoz";
+            } else if (name.equals("Acyclovir_400mg")) {
+                ingredient = "Acyclovir";
+                strength = "400";
+                manufacturer = "Stella";
+            } else if (name.equals("Nexium_mups_20mg")) {
+                ingredient = "Esomeprazole";
+                strength = "20";
+                manufacturer = "AstraZeneca";
+            } else if (name.equals("Loperamid_2mg")) {
+                ingredient = "Loperamide";
+                strength = "2";
+            } else if (name.equals("Enterogermina")) {
+                ingredient = "Bacillus clausii";
+                dosageForm = "Suspension";
+                strength = "5";
+                unit = "ml";
+            } else if (name.equals("Tiffy_Dey")) {
+                ingredient = "Paracetamol + Chlorpheniramine";
+            } else if (name.equals("Telfast_HD_180mg")) {
+                ingredient = "Fexofenadine";
+                strength = "180";
+            } else if (name.equals("Eugica")) {
+                ingredient = "Herbal Extract";
+                dosageForm = "Syrup";
+                strength = "10";
+                unit = "ml";
+            } else if (name.equals("Enat_400")) {
+                ingredient = "Vitamin E";
+                strength = "400";
+                unit = "IU";
+            } else if (name.equals("Ginkgo_Biloba_120mg")) {
+                ingredient = "Ginkgo Biloba";
+                strength = "120";
+            }
+hãy viết ra hết toàn bộ các manufacturer đừng có giải thích cứ làm như t tôi đã nói
+ChatGPT said:
+Sanofi
+Bayer
+GSK
+Abbott
+Imexpharm
+DHG Pharma
+Pfizer
+Kingphar
+UPSA
+Sandoz
+Stella
+AstraZeneca
+
+You said:
+hãy liệt kê cho tôi biết các manufaturer của các loại thuốc sau :
+                "Paracetamol_500mg",
+                "Aspirin_500mg",
+                "Amoxicillin_500mg",
+                "Ibuprofen_200mg",
+                "Cefixime_200mg",
+                "Vitamin_C",
+                "Meloxicam_7.5mg",
+                "Cefdinir_300mg",
+                "SkillMax_Ocavill",
+                "Siro_Ginkid_ZinC",
+                "Echina_Kingphar",
+                "Panadol_Extra",
+                "Efferalgan_500mg",
+                "Hapacol_650",
+                "Alphachoay",
+                "Augmentin_625mg",
+                "Cefuroxim_500mg",
+                "Acyclovir_400mg",
+                "Nexium_mups_20mg",
+                "Loperamid_2mg",
+                "Enterogermina",
+                "Tiffy_Dey",
+                "Telfast_HD_180mg",
+                "Eugica",
+                "Enat_400",
+                "Ginkgo_Biloba_120mg",
+ChatGPT said:
+Paracetamol_500mg → Sanofi
+
+Aspirin_500mg → Bayer
+
+Amoxicillin_500mg → GSK
+
+Ibuprofen_200mg → Abbott
+
+Cefixime_200mg → Imexpharm
+
+Vitamin_C → DHG Pharma
+
+Meloxicam_7.5mg → Sanofi
+
+Cefdinir_300mg → Pfizer
+
+SkillMax_Ocavill → (không có)
+
+Siro_Ginkid_ZinC → (không có)
+
+Echina_Kingphar → Kingphar
+
+Panadol_Extra → GSK
+
+Efferalgan_500mg → UPSA
+
+Hapacol_650 → DHG Pharma
+
+Alphachoay → (không có)
+
+Augmentin_625mg → GSK
+
+Cefuroxim_500mg → Sandoz
+
+Acyclovir_400mg → Stella
+
+Nexium_mups_20mg → AstraZeneca
+
+Loperamid_2mg → (không có)
+
+Enterogermina → (không có)
+
+Tiffy_Dey → (không có)
+
+Telfast_HD_180mg → (không có)
+
+Eugica → (không có)
+
+Enat_400 → (không có)
+
+Ginkgo_Biloba_120mg → (không có)
+
+You said:
+hãy thêm các manufacturer cho các loại thuốc chưa có và liệt kê lại cho tôi
+ChatGPT said:
+Paracetamol_500mg → Sanofi
+
+Aspirin_500mg → Bayer
+
+Amoxicillin_500mg → GSK
+
+Ibuprofen_200mg → Abbott
+
+Cefixime_200mg → Imexpharm
+
+Vitamin_C → DHG Pharma
+
+Meloxicam_7.5mg → Sanofi
+
+Cefdinir_300mg → Pfizer
+
+SkillMax_Ocavill → OPV Pharma
+
+Siro_Ginkid_ZinC → OPV Pharma
+
+Echina_Kingphar → Kingphar
+
+Panadol_Extra → GSK
+
+Efferalgan_500mg → UPSA
+
+Hapacol_650 → DHG Pharma
+
+Alphachoay → Choay Pharma
+
+Augmentin_625mg → GSK
+
+Cefuroxim_500mg → Sandoz
+
+Acyclovir_400mg → Stella
+
+Nexium_mups_20mg → AstraZeneca
+
+Loperamid_2mg → Imexpharm
+
+Enterogermina → Sanofi
+
+Tiffy_Dey → United Pharma
+
+Telfast_HD_180mg → Sanofi
+
+Eugica → Mega We Care
+
+Enat_400 → Mega We Care
+
+Ginkgo_Biloba_120mg → Traphaco
+
+You said:
+hãy điều chỉnh code java cho đúng các manufaturereở từng loại thuốc :
+            if (name.equals("Paracetamol_500mg")) {
+                ingredient = "Paracetamol";
+                manufacturer = "Sanofi";
+            } else if (name.equals("Aspirin_500mg")) {
+                ingredient = "Aspirin";
+                manufacturer = "Bayer";
+            } else if (name.equals("Amoxicillin_500mg")) {
+                ingredient = "Amoxicillin";
+                dosageForm = "Capsule";
+                manufacturer = "GSK";
+            } else if (name.equals("Ibuprofen_200mg")) {
+                ingredient = "Ibuprofen";
+                strength = "200";
+                manufacturer = "Abbott";
+            } else if (name.equals("Cefixime_200mg")) {
+                ingredient = "Cefixime";
+                dosageForm = "Capsule";
+                strength = "200";
+                manufacturer = "Imexpharm";
+            } else if (name.equals("Vitamin_C")) {
+                ingredient = "Ascorbic Acid";
+                manufacturer = "DHG Pharma";
+            } else if (name.equals("Meloxicam_7.5mg")) {
+                ingredient = "Meloxicam";
+                strength = "7.5";
+                manufacturer = "Sanofi";
+            } else if (name.equals("Cefdinir_300mg")) {
+                ingredient = "Cefdinir";
+                dosageForm = "Capsule";
+                strength = "300";
+                manufacturer = "Pfizer";
+            } else if (name.equals("SkillMax_Ocavill")) {
+                ingredient = "Multivitamin";
+                dosageForm = "Syrup";
+                strength = "10";
+                unit = "ml";
+            } else if (name.equals("Siro_Ginkid_ZinC")) {
+                ingredient = "Zinc + Vitamin";
+                dosageForm = "Syrup";
+                strength = "10";
+                unit = "ml";
+            } else if (name.equals("Echina_Kingphar")) {
+                ingredient = "Echinacea";
+                manufacturer = "Kingphar";
+            } else if (name.equals("Panadol_Extra")) {
+                ingredient = "Paracetamol + Caffeine";
+                manufacturer = "GSK";
+            } else if (name.equals("Efferalgan_500mg")) {
+                ingredient = "Paracetamol";
+                manufacturer = "UPSA";
+            } else if (name.equals("Hapacol_650")) {
+                ingredient = "Paracetamol";
+                strength = "650";
+                manufacturer = "DHG Pharma";
+            } else if (name.equals("Alphachoay")) {
+                ingredient = "Alpha chymotrypsin";
+                unit = "IU";
+                strength = "4200";
+            } else if (name.equals("Augmentin_625mg")) {
+                ingredient = "Amoxicillin + Clavulanate";
+                strength = "625";
+                manufacturer = "GSK";
+            } else if (name.equals("Cefuroxim_500mg")) {
+                ingredient = "Cefuroxime";
+                manufacturer = "Sandoz";
+            } else if (name.equals("Acyclovir_400mg")) {
+                ingredient = "Acyclovir";
+                strength = "400";
+                manufacturer = "Stella";
+            } else if (name.equals("Nexium_mups_20mg")) {
+                ingredient = "Esomeprazole";
+                strength = "20";
+                manufacturer = "AstraZeneca";
+            } else if (name.equals("Loperamid_2mg")) {
+                ingredient = "Loperamide";
+                strength = "2";
+            } else if (name.equals("Enterogermina")) {
+                ingredient = "Bacillus clausii";
+                dosageForm = "Suspension";
+                strength = "5";
+                unit = "ml";
+            } else if (name.equals("Tiffy_Dey")) {
+                ingredient = "Paracetamol + Chlorpheniramine";
+            } else if (name.equals("Telfast_HD_180mg")) {
+                ingredient = "Fexofenadine";
+                strength = "180";
+            } else if (name.equals("Eugica")) {
+                ingredient = "Herbal Extract";
+                dosageForm = "Syrup";
+                strength = "10";
+                unit = "ml";
+            } else if (name.equals("Enat_400")) {
+                ingredient = "Vitamin E";
+                strength = "400";
+                unit = "IU";
+            } else if (name.equals("Ginkgo_Biloba_120mg")) {
+                ingredient = "Ginkgo Biloba";
+                strength = "120";
+            }
+ChatGPT said:
+if (name.equals("Paracetamol_500mg")) {
+    ingredient = "Paracetamol";
+    manufacturer = "Sanofi";
+
+} else if (name.equals("Aspirin_500mg")) {
+    ingredient = "Aspirin";
+    manufacturer = "Bayer";
+
+} else if (name.equals("Amoxicillin_500mg")) {
+    ingredient = "Amoxicillin";
+    dosageForm = "Capsule";
+    manufacturer = "GSK";
+
+} else if (name.equals("Ibuprofen_200mg")) {
+    ingredient = "Ibuprofen";
+    strength = "200";
+    manufacturer = "Abbott";
+
+} else if (name.equals("Cefixime_200mg")) {
+    ingredient = "Cefixime";
+    dosageForm = "Capsule";
+    strength = "200";
+    manufacturer = "Imexpharm";
+
+} else if (name.equals("Vitamin_C")) {
+    ingredient = "Ascorbic Acid";
+    manufacturer = "DHG Pharma";
+
+} else if (name.equals("Meloxicam_7.5mg")) {
+    ingredient = "Meloxicam";
+    strength = "7.5";
+    manufacturer = "Sanofi";
+
+} else if (name.equals("Cefdinir_300mg")) {
+    ingredient = "Cefdinir";
+    dosageForm = "Capsule";
+    strength = "300";
+    manufacturer = "Pfizer";
+
+} else if (name.equals("SkillMax_Ocavill")) {
+    ingredient = "Multivitamin";
+    dosageForm = "Syrup";
+    strength = "10";
+    unit = "ml";
+    manufacturer = "OPV Pharma";
+
+} else if (name.equals("Siro_Ginkid_ZinC")) {
+    ingredient = "Zinc + Vitamin";
+    dosageForm = "Syrup";
+    strength = "10";
+    unit = "ml";
+    manufacturer = "OPV Pharma";
+
+} else if (name.equals("Echina_Kingphar")) {
+    ingredient = "Echinacea";
+    manufacturer = "Kingphar";
+
+} else if (name.equals("Panadol_Extra")) {
+    ingredient = "Paracetamol + Caffeine";
+    manufacturer = "GSK";
+
+} else if (name.equals("Efferalgan_500mg")) {
+    ingredient = "Paracetamol";
+    manufacturer = "UPSA";
+
+} else if (name.equals("Hapacol_650")) {
+    ingredient = "Paracetamol";
+    strength = "650";
+    manufacturer = "DHG Pharma";
+
+} else if (name.equals("Alphachoay")) {
+    ingredient = "Alpha chymotrypsin";
+    unit = "IU";
+    strength = "4200";
+    manufacturer = "Choay Pharma";
+
+} else if (name.equals("Augmentin_625mg")) {
+    ingredient = "Amoxicillin + Clavulanate";
+    strength = "625";
+    manufacturer = "GSK";
+
+} else if (name.equals("Cefuroxim_500mg")) {
+    ingredient = "Cefuroxime";
+    manufacturer = "Sandoz";
+
+} else if (name.equals("Acyclovir_400mg")) {
+    ingredient = "Acyclovir";
+    strength = "400";
+    manufacturer = "Stella";
+
+} else if (name.equals("Nexium_mups_20mg")) {
+    ingredient = "Esomeprazole";
+    strength = "20";
+    manufacturer = "AstraZeneca";
+
+} else if (name.equals("Loperamid_2mg")) {
+    ingredient = "Loperamide";
+    strength = "2";
+    manufacturer = "Imexpharm";
+
+} else if (name.equals("Enterogermina")) {
+    ingredient = "Bacillus clausii";
+    dosageForm = "Suspension";
+    strength = "5";
+    unit = "ml";
+    manufacturer = "Sanofi";
+
+} else if (name.equals("Tiffy_Dey")) {
+    ingredient = "Paracetamol + Chlorpheniramine";
+    manufacturer = "United Pharma";
+
+} else if (name.equals("Telfast_HD_180mg")) {
+    ingredient = "Fexofenadine";
+    strength = "180";
+    manufacturer = "Sanofi";
+
+} else if (name.equals("Eugica")) {
+    ingredient = "Herbal Extract";
+    dosageForm = "Syrup";
+    strength = "10";
+    unit = "ml";
+    manufacturer = "Mega We Care";
+
+} else if (name.equals("Enat_400")) {
+    ingredient = "Vitamin E";
+    strength = "400";
+    unit = "IU";
+    manufacturer = "Mega We Care";
+
+} else if (name.equals("Ginkgo_Biloba_120mg")) {
+    ingredient = "Ginkgo Biloba";
+    strength = "120";
+    manufacturer = "Traphaco";
+}
+You said:
+hãy viết lại code cách "tab" 2 lần
+ChatGPT said:
+		if (name.equals("Paracetamol_500mg")) {
+				ingredient = "Paracetamol";
+				manufacturer = "Sanofi";
+
+		} else if (name.equals("Aspirin_500mg")) {
+				ingredient = "Aspirin";
+				manufacturer = "Bayer";
+
+		} else if (name.equals("Amoxicillin_500mg")) {
+				ingredient = "Amoxicillin";
+				dosageForm = "Capsule";
+				manufacturer = "GSK";
+
+		} else if (name.equals("Ibuprofen_200mg")) {
+				ingredient = "Ibuprofen";
+				strength = "200";
+				manufacturer = "Abbott";
+
+		} else if (name.equals("Cefixime_200mg")) {
+				ingredient = "Cefixime";
+				dosageForm = "Capsule";
+				strength = "200";
+				manufacturer = "Imexpharm";
+
+		} else if (name.equals("Vitamin_C")) {
+				ingredient = "Ascorbic Acid";
+				manufacturer = "DHG Pharma";
+
+		} else if (name.equals("Meloxicam_7.5mg")) {
+				ingredient = "Meloxicam";
+				strength = "7.5";
+				manufacturer = "Sanofi";
+
+		} else if (name.equals("Cefdinir_300mg")) {
+				ingredient = "Cefdinir";
+				dosageForm = "Capsule";
+				strength = "300";
+				manufacturer = "Pfizer";
+
+		} else if (name.equals("SkillMax_Ocavill")) {
+				ingredient = "Multivitamin";
+				dosageForm = "Syrup";
+				strength = "10";
+				unit = "ml";
+				manufacturer = "OPV Pharma";
+
+		} else if (name.equals("Siro_Ginkid_ZinC")) {
+				ingredient = "Zinc + Vitamin";
+				dosageForm = "Syrup";
+				strength = "10";
+				unit = "ml";
+				manufacturer = "OPV Pharma";
+
+		} else if (name.equals("Echina_Kingphar")) {
+				ingredient = "Echinacea";
+				manufacturer = "Kingphar";
+
+		} else if (name.equals("Panadol_Extra")) {
+				ingredient = "Paracetamol + Caffeine";
+				manufacturer = "GSK";
+
+		} else if (name.equals("Efferalgan_500mg")) {
+				ingredient = "Paracetamol";
+				manufacturer = "UPSA";
+
+		} else if (name.equals("Hapacol_650")) {
+				ingredient = "Paracetamol";
+				strength = "650";
+				manufacturer = "DHG Pharma";
+
+		} else if (name.equals("Alphachoay")) {
+				ingredient = "Alpha chymotrypsin";
+				unit = "IU";
+				strength = "4200";
+				manufacturer = "Choay Pharma";
+
+		} else if (name.equals("Augmentin_625mg")) {
+				ingredient = "Amoxicillin + Clavulanate";
+				strength = "625";
+				manufacturer = "GSK";
+
+		} else if (name.equals("Cefuroxim_500mg")) {
+				ingredient = "Cefuroxime";
+				manufacturer = "Sandoz";
+
+		} else if (name.equals("Acyclovir_400mg")) {
+				ingredient = "Acyclovir";
+				strength = "400";
+				manufacturer = "Stella";
+
+		} else if (name.equals("Nexium_mups_20mg")) {
+				ingredient = "Esomeprazole";
+				strength = "20";
+				manufacturer = "AstraZeneca";
+
+		} else if (name.equals("Loperamid_2mg")) {
+				ingredient = "Loperamide";
+				strength = "2";
+				manufacturer = "Imexpharm";
+
+		} else if (name.equals("Enterogermina")) {
+				ingredient = "Bacillus clausii";
+				dosageForm = "Suspension";
+				strength = "5";
+				unit = "ml";
+				manufacturer = "Sanofi";
+
+		} else if (name.equals("Tiffy_Dey")) {
+				ingredient = "Paracetamol + Chlorpheniramine";
+				manufacturer = "United Pharma";
+
+		} else if (name.equals("Telfast_HD_180mg")) {
+				ingredient = "Fexofenadine";
+				strength = "180";
+				manufacturer = "Sanofi";
+
+		} else if (name.equals("Eugica")) {
+				ingredient = "Herbal Extract";
+				dosageForm = "Syrup";
+				strength = "10";
+				unit = "ml";
+				manufacturer = "Mega We Care";
+
+		} else if (name.equals("Enat_400")) {
+				ingredient = "Vitamin E";
+				strength = "400";
+				unit = "IU";
+				manufacturer = "Mega We Care";
+
+		} else if (name.equals("Ginkgo_Biloba_120mg")) {
+				ingredient = "Ginkgo Biloba";
+				strength = "120";
+				manufacturer = "Traphaco";
+		}
