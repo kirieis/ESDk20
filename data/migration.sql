@@ -31,7 +31,7 @@ CREATE TABLE Medicine (
     manufacturer NVARCHAR(100),
     expiry DATE,
     quantity INT,
-    price INT
+    price INT,
 );
 
 /* =========================
