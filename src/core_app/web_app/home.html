@@ -95,6 +95,7 @@
 
       <div class="layout">
         <!-- FILTER PANEL -->
+        <!-- FILTER PANEL -->
         <aside class="filters">
           <div class="filters__title">Bộ lọc</div>
 
@@ -165,6 +166,35 @@
       Connect with us : 03xxxxxxx
     </div>
   </footer>
+
+  <!-- OPTION MODAL -->
+  <div id="optModal" class="modal">
+    <div class="modal__overlay" onclick="closeModal()"></div>
+    <div class="modal__content">
+      <button class="modal__close" onclick="closeModal()">&times;</button>
+
+      <div class="modal__header">
+        <h3 id="modalName">Tên thuốc...</h3>
+        <div id="modalMeta" class="modal__meta">Mã: ...</div>
+      </div>
+
+      <div class="modal__body">
+        <div class="modal__price" id="modalPrice">0đ</div>
+
+        <label class="field">
+          <span>Đơn vị tính</span>
+          <select id="modalUnit" class="field-select">
+            <!-- Populated by JS -->
+          </select>
+        </label>
+
+        <div class="modal__actions">
+          <button class="btn btn--ghost" onclick="closeModal()">Huỷ</button>
+          <button id="modalConfirmBtn" class="btn btn--primary">Thêm vào giỏ</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="home.js"></script>
 </body>

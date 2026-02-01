@@ -43,6 +43,7 @@
   /* Cam - cảnh báo */
   --danger: #dc2626;
   /* Đỏ - lỗi */
+  --secondary: #c9a227;
 
   --border: #e5e7eb;
   --border-gold: rgba(201, 162, 39, 0.3);
@@ -505,7 +506,7 @@ body {
   flex: 1;
   min-width: 0;
   margin-right: 0;
-  padding-right: 60px;
+  padding-right: 80px;
   /* Make space for absolute tag */
 }
 
@@ -516,6 +517,11 @@ body {
   color: var(--text-dark);
   margin: 0;
   line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  display: block;
 }
 
 .card__meta {
@@ -566,9 +572,9 @@ body {
 .card__mid {
   padding: 12px 20px 16px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  justify-content: space-between;
+  margin-top: auto;
 }
 
 .price {
@@ -580,6 +586,7 @@ body {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+  width: 100%;
 }
 
 .price del {
@@ -587,16 +594,16 @@ body {
   font-size: 14px;
   color: var(--text-muted);
   font-weight: 400;
-  margin-left: 10px;
+  margin-left: auto;
 }
 
 .unit-selector {
-  flex: 1;
+  width: 100%;
 }
 
 .unit-input {
   width: 100%;
-  padding: 6px 12px;
+  padding: 8px 12px;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   background: var(--light-bg);
@@ -605,10 +612,12 @@ body {
   color: var(--text-dark);
   outline: none;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
 .unit-input:focus {
   border-color: var(--gold);
+  background: var(--white);
 }
 
 .card__actions {
@@ -1056,7 +1065,88 @@ body {
   opacity: 1;
 }
 
-.toast span {
-  font-weight: 600;
-  color: var(--gold-light);
+
+
+/* MODAL */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.modal__content {
+  position: relative;
+  width: 90%;
+  max-width: 400px;
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+  z-index: 2;
+}
+
+.modal.active .modal__content {
+  transform: translateY(0);
+}
+
+.modal__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #888;
+}
+
+.modal__header {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 12px;
+}
+
+.modal__header h3 {
+  margin: 0 0 4px;
+  font-size: 20px;
+  color: var(--primary);
+}
+
+.modal__meta {
+  font-size: 13px;
+  color: #666;
+}
+
+.modal__price {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--secondary);
+  margin-bottom: 16px;
+}
+
+.modal__actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  justify-content: flex-end;
 }

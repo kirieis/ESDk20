@@ -24,6 +24,29 @@ function formatVND(n) {
   return n.toLocaleString("vi-VN") + "đ";
 }
 
+// Global Helpers
+const getCart = () => JSON.parse(localStorage.getItem("cart") || "[]");
+const saveCart = (cart) => {
+  localStorage.setItem("cart", JSON.stringify(cart));
+  const badge = $("cartBadge");
+  if (badge) {
+    badge.textContent = String(cart.reduce((sum, item) => sum + item.qty, 0));
+  }
+};
+
+function showToast(msg) {
+  let t = $("toast");
+  if (!t) {
+    t = document.createElement("div");
+    t.id = "toast";
+    t.className = "toast";
+    document.body.appendChild(t);
+  }
+  t.innerHTML = `🛒 <span>${msg}</span> đã được thêm vào giỏ!`;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 3000);
+}
+
 function clampNumber(val) {
   if (val === "" || val === null || val === undefined) return null;
   const num = Number(val);
@@ -47,23 +70,38 @@ function parseCSV(text) {
     const trimmed = line.trim();
     if (!trimmed || trimmed.startsWith("medicine_id")) return;
 
+    // Handle CSV with commas inside quotes if needed, but for now simple split
     const parts = trimmed.split(",");
-    if (parts.length < 5) return;
 
-    const [medId, name, batchId, dateStr, quantityStr] = parts;
+    // Expecting at least 11 columns based on new CSV structure
+    // medicine_id,name,batch,ingredient,dosage_form,strength,unit,manufacturer,expiry,quantity,price
+    if (parts.length < 11) return;
+
+    const [medId, name, batchId, ingredient, dosage, strength, unit, manufacturer, dateStr, quantityStr, priceStr] = parts;
     const quantity = Number(quantityStr);
+    const price = Number(priceStr);
 
     if (!medId || !name) return;
 
-    // --- Mocking Pricing & Sale (Deterministic based on medId) ---
+    // --- Pricing & Sale Logic ---
+    // Deterministic sale logic since it is not in CSV yet
     const h = hashString(medId);
-    const price = 10000 + (h % 200) * 1000; // 10k - 210k
-    const storeIdx = (h % 5) + 1;
-    const store = `CN${storeIdx}`;
-
     const hasSale = h % 5 === 0; // 20% chance
     const discount = hasSale ? (5 + (hashString(name) % 26)) : 0;
-    const finalPrice = discount ? Math.round(price * (1 - discount / 100)) : price;
+
+    // Default conversion rates if not in CSV
+    const vienPerVi = 10;
+    const viPerHop = 3;
+
+    // Base price is per Unit (Viên)
+    const basePrice = isNaN(price) ? 0 : price;
+
+    // Calculate final price with discount
+    // This is the BASE unit price
+    const finalBasePrice = discount ? Math.round(basePrice * (1 - discount / 100)) : basePrice;
+
+    const storeIdx = (h % 5) + 1;
+    const store = `CN${storeIdx}`;
     const popularity = (hashString(name + batchId) % 1000) + 1;
 
     rows.push({
@@ -72,9 +110,16 @@ function parseCSV(text) {
       batchId,
       date: dateStr,
       quantity: isNaN(quantity) ? 0 : quantity,
-      price,
+
+      // Pricing Details
+      price: basePrice, // Original Base Price
       discount,
-      finalPrice,
+      finalBasePrice, // Discounted Base Price
+
+      // Conversion
+      vienPerVi,
+      viPerHop,
+
       store,
       popularity
     });
@@ -86,11 +131,9 @@ function parseCSV(text) {
 // -------- CSV Loader --------
 async function loadProducts() {
   try {
-    // Relative path used because Live Server root varies, but usually it's project root
-    // Try absolute from root first
     const res = await fetch("/data/medicines_clean.csv", { cache: "no-store" });
     if (!res.ok) {
-      // Fallback for different Live Server configurations
+      // Fallback
       const fallbackRes = await fetch("../../../data/medicines_clean.csv", { cache: "no-store" });
       if (!fallbackRes.ok) throw new Error("CSV Not Found");
       const text = await fallbackRes.text();
@@ -120,8 +163,11 @@ function applyFilters(products) {
   }
 
   if (state.branch) out = out.filter(p => p.store === state.branch);
-  if (min !== null) out = out.filter(p => p.finalPrice >= min);
-  if (max !== null) out = out.filter(p => p.finalPrice <= max);
+
+  // Filter based on BASE UNIT PRICE
+  if (min !== null) out = out.filter(p => p.finalBasePrice >= min);
+  if (max !== null) out = out.filter(p => p.finalBasePrice <= max);
+
   if (state.onlySale) out = out.filter(p => p.discount > 0);
 
   out = sortProducts(out, state.sort);
@@ -132,10 +178,10 @@ function sortProducts(arr, sortKey) {
   const a = [...arr];
   switch (sortKey) {
     case "price_asc":
-      a.sort((x, y) => x.finalPrice - y.finalPrice);
+      a.sort((x, y) => x.finalBasePrice - y.finalBasePrice);
       break;
     case "price_desc":
-      a.sort((x, y) => y.finalPrice - x.finalPrice);
+      a.sort((x, y) => y.finalBasePrice - x.finalBasePrice);
       break;
     case "date_desc":
       a.sort((x, y) => String(y.date).localeCompare(String(x.date)));
@@ -165,21 +211,37 @@ function paginate(arr) {
   };
 }
 
+// -------- Pricing Logic --------
+function calculateDisplayPrice(product, unit) {
+  let multiplier = 1;
+  if (unit === "Vỉ") multiplier = product.vienPerVi;
+  if (unit === "Hộp") multiplier = product.vienPerVi * product.viPerHop;
+
+  const original = product.price * multiplier;
+  const final = product.finalBasePrice * multiplier;
+
+  return { original, final };
+}
+
 // -------- UI Rendering --------
 function productCard(p) {
   const saleTag = p.discount > 0
     ? `<span class="tag tag--sale">SALE -${p.discount}%</span>`
     : `<span class="tag">NEW</span>`;
 
+  // Display base price (Viên) on card
+  // If we want to show "Hộp" price by default, we can, but "Viên" is consistent base
+  const { final } = calculateDisplayPrice(p, "Viên");
+
   const priceHtml = p.discount > 0
-    ? `<span class="price">${formatVND(p.finalPrice)} <del>${formatVND(p.price)}</del></span>`
-    : `<span class="price">${formatVND(p.finalPrice)}</span>`;
+    ? `<span class="price">${formatVND(final)}<span class="unit">/viên</span> <del>${formatVND(p.price)}</del></span>`
+    : `<span class="price">${formatVND(final)}<span class="unit">/viên</span></span>`;
 
   return `
     <article class="card">
       <div class="card__top">
         <div>
-          <h3 class="card__name">${escapeHtml(p.name)}</h3>
+          <h3 class="card__name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</h3>
           <div class="card__meta">
             <div class="line">Mã: <b>${escapeHtml(p.id)}</b> • Lô: <b>${escapeHtml(p.batchId)}</b></div>
             <div class="line">CN: <b>${escapeHtml(p.store)}</b> • HSD: <b>${escapeHtml(p.date)}</b></div>
@@ -190,21 +252,105 @@ function productCard(p) {
 
       <div class="card__mid">
         ${priceHtml}
-        <div class="unit-selector">
-          <select class="field-select unit-input" data-id="${p.id}">
-            <option value="Viên">Viên</option>
-            <option value="Vỉ">Vỉ</option>
-            <option value="Hộp">Hộp</option>
-          </select>
-        </div>
+        <!-- Unit selector removed from card face -->
       </div>
 
       <div class="card__actions">
-        <button class="btn btn--buy" data-buy="${p.id}">MUA NGAY</button>
-        <button class="btn btn--add" data-add="${p.id}">+ Giỏ</button>
+        <button class="btn btn--buy" onclick="openModal('${p.id}', true)">MUA NGAY</button>
+        <button class="btn btn--add" onclick="openModal('${p.id}', false)">+ Giỏ</button>
       </div>
     </article>
   `;
+}
+
+// -------- Modal Logic --------
+let currentModalProductId = null;
+let isBuyNow = false;
+
+window.openModal = (id, buyNow) => {
+  const p = state.products.find(x => x.id === id);
+  if (!p) return;
+
+  currentModalProductId = id;
+  isBuyNow = buyNow;
+
+  $("modalName").textContent = p.name;
+  $("modalMeta").textContent = `Mã: ${p.id} • Lô: ${p.batchId}`;
+
+  // Populate Unit Selector
+  const select = $("modalUnit");
+  select.innerHTML = `
+    <option value="Viên">Viên</option>
+    <option value="Vỉ">Vỉ (x${p.vienPerVi})</option>
+    <option value="Hộp">Hộp (x${p.vienPerVi * p.viPerHop})</option>
+  `;
+  select.value = "Viên"; // Reset to default
+
+  // Initial Price Update
+  updateModalPrice();
+
+  // Show Modal
+  $("optModal").classList.add("active");
+
+  // Setup listener
+  select.onchange = updateModalPrice;
+  $("modalConfirmBtn").onclick = handleModalConfirm;
+};
+
+window.closeModal = () => {
+  $("optModal").classList.remove("active");
+  currentModalProductId = null;
+};
+
+function updateModalPrice() {
+  if (!currentModalProductId) return;
+  const p = state.products.find(x => x.id === currentModalProductId);
+  const unit = $("modalUnit").value;
+  const { original, final } = calculateDisplayPrice(p, unit);
+
+  const priceEl = $("modalPrice");
+  if (p.discount > 0) {
+    priceEl.innerHTML = `${formatVND(final)} <del style="font-size: 16px; color: #999; font-weight: 400;">${formatVND(original)}</del>`;
+  } else {
+    priceEl.textContent = formatVND(final);
+  }
+}
+
+function handleModalConfirm() {
+  if (!currentModalProductId) return;
+  const unit = $("modalUnit").value;
+  addToCart(currentModalProductId, unit);
+  closeModal();
+
+  if (isBuyNow) {
+    // Redirect to checkout or similar if needed
+    window.location.href = "cart.html";
+  }
+}
+
+function addToCart(id, unit) {
+  const product = state.products.find((p) => p.id === id);
+  if (!product) return;
+
+  const { final } = calculateDisplayPrice(product, unit);
+
+  let cart = getCart();
+  const existing = cart.find(item => item.id === id && item.unit === unit);
+
+  if (existing) {
+    existing.qty += 1;
+  } else {
+    cart.push({
+      id: product.id,
+      name: product.name,
+      price: final,
+      unit: unit,
+      qty: 1
+    });
+  }
+
+  saveCart(cart);
+  showToast(product.name);
 }
 
 function escapeHtml(str) {
@@ -258,12 +404,6 @@ function renderAllSections() {
 
 // -------- Events --------
 function bindEvents() {
-  const getCart = () => JSON.parse(localStorage.getItem("cart") || "[]");
-  const saveCart = (cart) => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-    $("cartBadge").textContent = String(cart.reduce((sum, item) => sum + item.qty, 0));
-  };
-
   // Set initial badge
   saveCart(getCart());
 
@@ -276,6 +416,12 @@ function bindEvents() {
       const product = state.products.find((p) => p.id === id);
       const unit = document.querySelector(`.unit-input[data-id="${id}"]`)?.value || "Viên";
 
+      let multiplier = 1;
+      if (unit === "Vỉ") multiplier = product.vienPerVi;
+      if (unit === "Hộp") multiplier = product.vienPerVi * product.viPerHop;
+
+      const unitPrice = product.finalBasePrice * multiplier;
+
       let cart = getCart();
       const existing = cart.find(item => item.id === id && item.unit === unit);
 
@@ -285,7 +431,7 @@ function bindEvents() {
         cart.push({
           id: product.id,
           name: product.name,
-          price: product.finalPrice,
+          price: unitPrice,
           unit: unit,
           qty: 1
         });
@@ -304,19 +450,6 @@ function bindEvents() {
   $("btnCart").addEventListener("click", () => {
     window.location.href = "cart.html";
   });
-
-  function showToast(msg) {
-    let t = $("toast");
-    if (!t) {
-      t = document.createElement("div");
-      t.id = "toast";
-      t.className = "toast";
-      document.body.appendChild(t);
-    }
-    t.innerHTML = `🛒 <span>${msg}</span> đã được thêm vào giỏ!`;
-    t.classList.add("show");
-    setTimeout(() => t.classList.remove("show"), 3000);
-  }
 
   $("btnSearch").addEventListener("click", () => {
     state.query = $("globalSearch").value;
@@ -400,7 +533,8 @@ function bindEvents() {
   }
 
   $("btnCart").addEventListener("click", () => {
-    alert(`Giỏ hàng: ${state.cartCount} sản phẩm.`);
+    // alert(`Giỏ hàng: ${state.cartCount} sản phẩm.`); // Removed ugly alert
+    window.location.href = "cart.html";
   });
 }
 
