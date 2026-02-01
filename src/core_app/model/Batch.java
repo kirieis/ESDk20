@@ -11,6 +11,7 @@ public class Batch implements Comparable<Batch> {
 
     private int tabletsPerBlister;
     private int blisterPerBox;
+    private int bottle;
 
     private int totalTablets;
 
@@ -60,6 +61,8 @@ public class Batch implements Comparable<Batch> {
                 return quantity * tabletsPerBlister;
             case BOX:
                 return quantity * blisterPerBox * tabletsPerBlister;
+            case BOTTLE:
+                return quantity * bottle;
 
             default:
                 throw new IllegalArgumentException("Invalid unit type");

@@ -150,7 +150,7 @@ public class DataGenerator {
 
             // default values
             String ingredient = "unknown";
-            String dosageForm = "Tablet";
+            String dosageForm = "TABLET";
             String strength = "500";
             String unit = "mg";
             String manufacturer = "Unknown";
@@ -319,7 +319,6 @@ switch (name) {
 
 default:
     ingredient = ingredientlist[r.nextInt(ingredientlist.length)];
-
     dosageForm = dosageFormlist[r.nextInt(dosageFormlist.length)];
     strength   = strengthlist[r.nextInt(strengthlist.length)];
     unit       = unitlist[r.nextInt(unitlist.length)];
