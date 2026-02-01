@@ -54,37 +54,75 @@ GO
 
 /* =========================
    CUSTOMER
+   (MATCH JAVA MODEL: Customer.java)
    ========================= */
 CREATE TABLE Customer (
     customer_id INT IDENTITY PRIMARY KEY,
     full_name NVARCHAR(100),
     phone VARCHAR(20),
-    dob DATE,
     address NVARCHAR(255),
-    loyalty_points INT DEFAULT 0,
     username VARCHAR(50) UNIQUE,
     password VARCHAR(255),
     role VARCHAR(20) DEFAULT 'CUSTOMER'
 );
+GO
 
--- Seed initial users
+/* =========================
+   IMPORT CUSTOMER DATA
+   ========================= */
+--Nguyen_Van_An path:E:\Project-LAB-github\lab211-project-group1\data\customers.csv--
+--Tran Quoc Thinh path:C:\Users\PC\Documents\GitHub\project_group1\data\customers.csv--
+--Nguyen Tri Thien path: C:\Users\nguye\Documents\GitHub\lab211-project-group1\data\customers.csv--
+--Hang Vo Minh Nhat path: C:\Users\nhatg\Documents\GitHub\lab211-project-group1\data\customers.csv--
+BULK INSERT Customer 
+FROM 'C:\Users\PC\Documents\GitHub\project_group1\data\customers.csv'
+WITH (
+    FIRSTROW = 2,
+    FIELDTERMINATOR = ',',
+    ROWTERMINATOR = '0x0a',
+    CODEPAGE = '65001'
+);
+GO
+
+-- Seed initial users (optional, if not in CSV)
 -- Admin: admin / admin
 -- User: user / 123
-INSERT INTO Customer (full_name, phone, dob, address, loyalty_points, username, password, role) 
-VALUES (N'Quản Trị Viên', '0909000111', '1990-01-01', 'HCMC', 100, 'admin', 'admin', 'ADMIN');
+--INSERT INTO Customer (full_name, phone, address, username, password, role) 
+--VALUES (N'Quản Trị Viên', '0909000111', 'HCMC', 'admin', 'admin', 'ADMIN');
 
-INSERT INTO Customer (full_name, phone, dob, address, loyalty_points, username, password, role) 
-VALUES (N'Nguyễn Văn A', '0912345678', '2000-05-20', 'Hanoi', 0, 'user', '123', 'CUSTOMER');
+--INSERT INTO Customer (full_name, phone, address, username, password, role) 
+--VALUES (N'Nguyễn Văn A', '0912345678', 'Hanoi', 'user', '123', 'CUSTOMER');
+--GO
 
 /* =========================
    PHARMACIST
+   (MATCH JAVA MODEL: Pharmacist.java)
    ========================= */
 CREATE TABLE Pharmacist (
     pharmacist_id INT IDENTITY PRIMARY KEY,
     full_name NVARCHAR(100),
     license_number VARCHAR(50),
+    branch_id INT,
     role VARCHAR(30)
 );
+GO
+
+/* =========================
+   IMPORT PHARMACIST DATA
+   ========================= */
+--Nguyen_Van_An path:E:\Project-LAB-github\lab211-project-group1\data\pharmacists.csv--
+--Tran Quoc Thinh path:C:\Users\PC\Documents\GitHub\project_group1\data\pharmacists.csv--
+--Nguyen Tri Thien path: C:\Users\nguye\Documents\GitHub\lab211-project-group1\data\pharmacists.csv--
+--Hang Vo Minh Nhat path: C:\Users\nhatg\Documents\GitHub\lab211-project-group1\data\pharmacists.csv--
+BULK INSERT Pharmacist 
+FROM 'C:\Users\PC\Documents\GitHub\project_group1\data\pharmacists.csv'
+WITH (
+    FIRSTROW = 2,
+    FIELDTERMINATOR = ',',
+    ROWTERMINATOR = '0x0a',
+    CODEPAGE = '65001'
+);
+GO
 
 /* =========================
    INVOICE
