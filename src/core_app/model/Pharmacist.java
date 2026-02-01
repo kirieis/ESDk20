@@ -4,7 +4,6 @@ public class Pharmacist {
     private int pharmacistId;
     private String fullName;
     private String licenseNumber;
-    private int branchId;
     private String role;
 
     public Pharmacist() {
@@ -15,7 +14,6 @@ public class Pharmacist {
         this.pharmacistId = pharmacistId;
         this.fullName = fullName;
         this.licenseNumber = licenseNumber;
-        this.branchId = branchId;
         this.role = role;
     }
 
@@ -42,14 +40,6 @@ public class Pharmacist {
 
     public void setLicenseNumber(String licenseNumber) {
         this.licenseNumber = licenseNumber;
-    }
-
-    public int getBranchId() {
-        return branchId;
-    }
-
-    public void setBranchId(int branchId) {
-        this.branchId = branchId;
     }
 
     public String getRole() {
