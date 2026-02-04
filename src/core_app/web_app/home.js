@@ -453,6 +453,14 @@ function renderAllSections() {
 
 // -------- Events --------
 function bindEvents() {
+  const btnGoSale = $("btnGoSale");
+  if (btnGoSale) {
+    btnGoSale.addEventListener("click", () => {
+      const section = $("saleSection");
+      if (section) section.scrollIntoView({ behavior: "smooth" });
+    });
+  }
+
   // Set initial badge
   saveCart(getCart());
 
@@ -562,11 +570,18 @@ function bindEvents() {
   const btnLogin = $("btnLogin");
 
   if (authState.isLoggedIn) {
+    let adminBtn = "";
+    if (authState.role === "ADMIN") {
+      adminBtn = `<a href="/admin/users" class="btn btn--primary" style="text-decoration: none; margin-right: 10px;">🛡️ Admin</a>`;
+    }
     // Show username as link to profile page
     userMenuContainer.innerHTML = `
-      <a href="profile.html" class="btn btn--ghost" style="text-decoration: none;">
-        👤 ${escapeHtml(authState.fullName)}
-      </a>
+      <div style="display: flex; align-items: center;">
+        ${adminBtn}
+        <a href="profile.html" class="btn btn--ghost" style="text-decoration: none;">
+          👤 ${escapeHtml(authState.fullName)}
+        </a>
+      </div>
     `;
   } else {
     btnLogin.innerHTML = `👤 Đăng nhập`;

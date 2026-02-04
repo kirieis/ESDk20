@@ -1,4 +1,5 @@
 package core_app.model;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,9 @@ public class Invoice {
     private int customerId;
     private double totalAmount;
     private String paymentMethod; // CASH, BANK_TRANSFER
+    private String status; // PENDING, PAID, CANCELLED
+    private String paymentProof; // URL/Path to image
+    private String customerName; // Name of the buyer
 
     private List<InvoiceDetail> invoiceDetails;
 
@@ -43,6 +47,34 @@ public class Invoice {
     }
 
     // Getters & Setters
+    public void setInvoiceId(int invoiceId) {
+        this.invoiceId = invoiceId;
+    }
+
+    public void setInvoiceDate(LocalDateTime invoiceDate) {
+        this.invoiceDate = invoiceDate;
+    }
+
+    public void setPharmacistId(int pharmacistId) {
+        this.pharmacistId = pharmacistId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
+
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public void setInvoiceDetails(List<InvoiceDetail> invoiceDetails) {
+        this.invoiceDetails = invoiceDetails;
+    }
+
     public int getInvoiceId() {
         return invoiceId;
     }
@@ -69,5 +101,29 @@ public class Invoice {
 
     public List<InvoiceDetail> getInvoiceDetails() {
         return invoiceDetails;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getPaymentProof() {
+        return paymentProof;
+    }
+
+    public void setPaymentProof(String paymentProof) {
+        this.paymentProof = paymentProof;
+    }
+
+    public String getCustomerName() {
+        return customerName != null ? customerName : "Khách vãng lai";
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 }

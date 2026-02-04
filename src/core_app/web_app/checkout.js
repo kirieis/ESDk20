@@ -35,8 +35,9 @@ const orderId = generateOrderId();
 // Check login status from backend
 async function checkLoginStatus() {
     try {
-        const res = await fetch('/api/auth-status');
+        const res = await fetch('api/auth-status');
         const data = await res.json();
+        console.log("DEBUG: Login Status Received:", data);
         isLoggedIn = data.isLoggedIn;
         currentUser = data.isLoggedIn ? data : null;
 
@@ -109,6 +110,19 @@ function updatePrices() {
     $("totalPrice").textContent = formatVND(total);
     $("transferAmount").textContent = formatVND(total);
     $("transferContent").textContent = orderId;
+
+    // Cập nhật QR Code động (VietQR - Miễn phí)
+    const qrImg = document.querySelector(".qr-container img");
+    if (qrImg) {
+        const bankId = "MB"; // Ngân hàng Quân đội
+        const accountNo = "3399377355";
+        const template = "compact2";
+        const amount = total;
+        const description = encodeURIComponent(orderId);
+        const accountName = encodeURIComponent("NGUYEN TRI THIEN");
+
+        qrImg.src = `https://img.vietqr.io/image/${bankId}-${accountNo}-${template}.png?amount=${amount}&addInfo=${description}&accountName=${accountName}`;
+    }
 }
 
 function applyDiscount() {
@@ -121,10 +135,27 @@ function applyDiscount() {
     }
 
     const code = $("discountCode").value.trim().toUpperCase();
+    console.log("DEBUG: Applying code:", code);
+    console.log("DEBUG: Current User:", currentUser);
 
     if (!code) {
         messageEl.innerHTML = '<span style="color: var(--danger);">Vui lòng nhập mã giảm giá!</span>';
         return;
+    }
+
+    // Special code for Admin
+    if (code === 'ADMIN_FREE') {
+        const userRole = (currentUser && currentUser.role) ? currentUser.role.toUpperCase() : "";
+        console.log("DEBUG: User Role for ADMIN_FREE:", userRole);
+        if (isLoggedIn && userRole === 'ADMIN') {
+            appliedDiscount = 100;
+            messageEl.innerHTML = `<span style="color: #6366f1; font-weight: 700;">🛡️ XÁC NHẬN ADMIN: Chế độ bán hàng 0đ đã kích hoạt!</span>`;
+            updatePrices();
+            return;
+        } else {
+            messageEl.innerHTML = `<span style="color: var(--danger);">⛔ Mã này chỉ dành riêng cho Admin! (Vai trò hiện tại: ${userRole || 'Không xác định'})</span>`;
+            return;
+        }
     }
 
     if (DISCOUNT_CODES[code]) {
@@ -138,19 +169,62 @@ function applyDiscount() {
     }
 }
 
-function confirmPayment() {
+async function confirmPayment() {
     const cart = getCart();
     if (cart.length === 0) {
-        alert('Đơn hàng trống!');
+        alert('Giỏ hàng trống!');
         return;
     }
 
-    // Show success modal
-    $("orderId").textContent = orderId;
-    $("successModal").classList.add("active");
+    const bankRadio = $("bankTransferRadio");
+    const proofInput = $("paymentProof");
+    const btnConfirm = $("btnConfirmPayment");
+    let proofBase64 = null;
 
-    // Clear cart
-    clearCart();
+    if (!proofInput || !proofInput.files[0]) {
+        alert("Vui lòng tải lên ảnh màn hình chuyển khoản để xác thực!");
+        return;
+    }
+
+    if (proofInput && proofInput.files[0]) {
+        // Convert image to base64 to send to server
+        const reader = new FileReader();
+        reader.readAsDataURL(proofInput.files[0]);
+        await new Promise(resolve => reader.onload = resolve);
+        proofBase64 = reader.result;
+    }
+
+    const orderData = {
+        orderId: orderId,
+        paymentMethod: "BANK_TRANSFER",
+        totalAmount: subtotal - Math.round(subtotal * appliedDiscount / 100),
+        items: cart,
+        paymentProof: proofBase64,
+        status: "PENDING"
+    };
+
+    try {
+        const res = await fetch('api/orders', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderData)
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+            // Show success modal
+            $("orderId").textContent = orderId;
+            $("successModal").classList.add("active");
+            // Clear cart
+            clearCart();
+        } else {
+            alert('Lỗi khi lưu đơn hàng: ' + result.message);
+        }
+    } catch (e) {
+        console.error("Payment error:", e);
+        alert('Có lỗi xảy ra khi xử lý thanh toán. Vui lòng thử lại.');
+    }
 }
 
 window.goHome = () => {
@@ -173,6 +247,37 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (discountInput) {
         discountInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') applyDiscount();
+        });
+    }
+
+    // Preview proof image and enable button
+    const proofInput = $("paymentProof");
+    const btnConfirm = $("btnConfirmPayment");
+
+    // Disable button by default for bank transfer
+    if (btnConfirm) {
+        btnConfirm.disabled = true;
+        btnConfirm.classList.add("btn-disabled");
+        btnConfirm.textContent = "⏳ VUI LÒNG TẢI ẢNH CHUYỂN KHOẢN";
+    }
+
+    if (proofInput) {
+        proofInput.addEventListener('change', function () {
+            const file = this.files[0];
+            if (file) {
+                // Enable button
+                btnConfirm.disabled = false;
+                btnConfirm.classList.remove("btn-disabled");
+                btnConfirm.textContent = "🚀 XÁC NHẬN THANH TOÁN";
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const preview = $("proofPreview");
+                    preview.style.display = "block";
+                    preview.querySelector("img").src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
         });
     }
 

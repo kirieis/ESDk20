@@ -26,7 +26,7 @@
             </div>
 
             <div class="search">
-                <input id="globalSearch" type="search" placeholder="Tìm tên thuốc, mã thuốc, chi nhánh..." />
+                <input id="globalSearch" type="search" placeholder="Tìm tên thuốc, mã thuốc..." />
                 <button id="btnSearch" class="btn btn--icon" title="Tìm kiếm" aria-label="Tìm kiếm">
                     🔍
                 </button>
@@ -85,14 +85,14 @@
                         <div class="stat-card">
                             <div class="stat-card__icon">🛒</div>
                             <div class="stat-card__info">
-                                <div class="stat-card__value">0</div>
+                                <div id="summaryCount" class="stat-card__value">0</div>
                                 <div class="stat-card__label">Đơn hàng đã mua</div>
                             </div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-card__icon">💰</div>
                             <div class="stat-card__info">
-                                <div class="stat-card__value">0đ</div>
+                                <div id="summaryTotal" class="stat-card__value">0đ</div>
                                 <div class="stat-card__label">Tổng tiền tích lũy</div>
                             </div>
                         </div>
@@ -148,45 +148,107 @@
     </footer>
 
     <script>
-        // Simple Profile Page Logic
-        const authState = window.authState || JSON.parse(localStorage.getItem('user_session') || '{}');
+        // 1. Fetch real auth state from server
+        async function loadProfile() {
+            try {
+                const res = await fetch('api/auth-status');
+                const data = await res.json();
 
-        // Check login inside this script since we might not have home.js fully loaded/configured for this page yet
-        // In a real app, this would be server-rendered or checked via API
-        // For now, mirroring what home.js does but simplified
+                if (!data.isLoggedIn) {
+                    window.location.href = 'login.html';
+                    return;
+                }
 
-        // Mock user if empty for UI testing
-        const currentUser = authState.fullName ? authState : {
-            fullName: "Nguyễn Văn Test",
-            role: "CUSTOMER",
-            username: "testuser",
-            phone: "0912345678",
-            address: "TP. Hồ Chí Minh"
-        };
+                const currentUser = data;
 
-        // 1. Bind Header
-        document.getElementById('headerUsername').textContent = currentUser.fullName;
-        document.getElementById('cartBadge').textContent = JSON.parse(localStorage.getItem("cart") || "[]").length;
+                // 2. Bind Header
+                document.getElementById('headerUsername').textContent = currentUser.fullName;
+                document.getElementById('cartBadge').textContent = JSON.parse(localStorage.getItem("cart") || "[]").length;
 
-        // 2. Bind Sidebar
-        document.getElementById('sbName').textContent = currentUser.fullName;
-        document.getElementById('sbRole').textContent = currentUser.role === 'ADMIN' ? 'Quản trị viên' : 'Thành viên';
+                // 3. Bind Sidebar
+                document.getElementById('sbName').textContent = currentUser.fullName;
+                document.getElementById('sbRole').textContent = currentUser.role === 'ADMIN' ? 'Quản trị viên' : 'Thành viên';
 
-        // Admin Link
-        if (currentUser.role === 'ADMIN') {
-            document.getElementById('adminLinkContainer').innerHTML = `
-            <a href="admin/users" class="profile-nav__item" style="text-decoration:none;">
-                ⚙️ Quản lý người dùng
-            </a>
-        `;
+                // Admin Link
+                if (currentUser.role === 'ADMIN') {
+                    document.getElementById('adminLinkContainer').innerHTML = `
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee;">
+                        <a href="/admin/users" class="profile-nav__item" style="text-decoration:none;">
+                            ⚙️ Quản lý người dùng
+                        </a>
+                        <a href="/admin/sales" class="profile-nav__item" style="text-decoration:none;">
+                            💰 Doanh thu & Tiền lời
+                        </a>
+                    </div>
+                `;
+                }
+
+                // 4. Bind Info Tab
+                document.getElementById('infoName').value = currentUser.fullName || '';
+                document.getElementById('infoPhone').value = currentUser.phone || "Chưa cập nhật";
+                document.getElementById('infoAddress').value = currentUser.address || "Chưa cập nhật";
+                document.getElementById('infoUsername').value = currentUser.username || 'user';
+
+                // 5. Fetch Orders
+                fetchOrders();
+            } catch (e) {
+                console.error("Failed to load profile", e);
+            }
         }
 
-        // 3. Bind Info Tab
-        document.getElementById('infoName').value = currentUser.fullName || '';
-        // Assuming we have these fields in session/authState, if not placeholders
-        document.getElementById('infoPhone').value = "09xxxxxxxx";
-        document.getElementById('infoAddress').value = "Chưa cập nhật";
-        document.getElementById('infoUsername').value = currentUser.username || 'user';
+        async function fetchOrders() {
+            try {
+                console.log("Fetching orders...");
+                const res = await fetch('api/orders');
+                const orders = await res.json();
+                console.log("Orders received:", orders);
+
+                const historyTab = document.getElementById('tab-history');
+                const overviewList = document.querySelector('#tab-overview .empty-state');
+                const summaryTotal = document.getElementById('summaryTotal');
+                const summaryCount = document.getElementById('summaryCount');
+
+                if (!orders || orders.length === 0) {
+                    console.log("No orders found for this user.");
+                    return;
+                }
+
+                summaryCount.textContent = orders.length;
+                let totalSpent = orders.reduce((sum, o) => sum + o.total, 0);
+
+                const renderOrder = (o) => {
+                    const dateStr = `${o.day}/${o.month}/${o.year}`;
+
+                    return `
+                        <div class="order-card" style="border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 16px; background: #fff; box-shadow: var(--shadow-sm);">
+                            <div style="display:flex; justify-content:space-between; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                                <span style="font-weight:700; color: var(--primary);">Đơn #INV-${o.id}</span>
+                                <span style="font-weight:800; color: var(--gold);">${o.total.toLocaleString('vi-VN')}đ</span>
+                            </div>
+                            <div style="font-size: 14px; margin-bottom: 8px;">
+                                ${o.items.map(item => `
+                                    <div style="display:flex; justify-content:space-between; margin-bottom: 4px;">
+                                        <span>${item.name} (x${item.qty})</span>
+                                        <span style="color: var(--text-muted);">${(item.price * item.qty).toLocaleString('vi-VN')}đ</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div style="font-size: 11px; color: var(--text-muted);">Ngày đặt: ${dateStr}</div>
+                        </div>
+                    `;
+                };
+
+                historyTab.innerHTML = `<h2 class="profile-heading">Lịch sử mua hàng</h2>` + orders.map(renderOrder).join('');
+                if (overviewList) {
+                    overviewList.parentElement.innerHTML = `<h3 style="margin-bottom: 16px;">Đơn hàng gần đây</h3>` + orders.slice(0, 2).map(renderOrder).join('');
+                }
+                summaryTotal.textContent = totalSpent.toLocaleString('vi-VN') + "đ";
+            } catch (e) {
+                console.error("Order fetch error", e);
+            }
+        }
+
+        loadProfile();
 
         // Tab Switching
         function showTab(tabName) {

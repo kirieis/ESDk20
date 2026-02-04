@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch sử Bán hàng & Lợi nhuận - Github Pharmacy</title>
+    <link rel="stylesheet" href="../home.css">
+    <style>
+        :root {
+            --admin-primary: #6366f1;
+            --admin-secondary: #4f46e5;
+            --admin-success: #10b981;
+            --admin-danger: #ef4444;
+            --admin-warning: #f59e0b;
+        }
+
+        body {
+            background-color: #f8fafc;
+        }
+
+        .admin-main {
+            padding: 2rem 0;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .page-header h1 {
+            font-size: clamp(1.5rem, 5vw, 2.25rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--admin-primary), var(--admin-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1.25rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card__label {
+            font-size: 0.875rem;
+            color: #64748b;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card__value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #1e293b;
+        }
+
+        .stat-card__value.revenue {
+            color: var(--admin-primary);
+        }
+
+        .stat-card__value.profit {
+            color: var(--admin-success);
+        }
+
+        /* Glass Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .modern-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .modern-table th {
+            background: #f1f5f9;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 700;
+            color: #1e293b;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .modern-table td {
+            padding: 1rem;
+            background: white;
+            border-bottom: 1px solid #f1f5f9;
+            color: #475569;
+            font-size: 0.9rem;
+        }
+
+        .modern-table tr:hover td {
+            background: #f8fafc;
+        }
+
+        .total-cell {
+            font-weight: 700;
+            color: var(--admin-primary);
+        }
+
+        .profit-cell {
+            font-weight: 700;
+            color: var(--admin-success);
+        }
+
+        .detail-row {
+            background: #f8fafc;
+            display: none;
+        }
+
+        .detail-row.active {
+            display: table-row;
+        }
+
+        .items-list {
+            padding: 1rem;
+            border-radius: 0.75rem;
+            background: #f1f5f9;
+            margin: 0.5rem 0;
+        }
+
+        .item-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.25rem 0;
+            border-bottom: 1px dashed #cbd5e1;
+        }
+
+        .item-line:last-child {
+            border-bottom: none;
+        }
+
+        .item-profit {
+            font-size: 0.8rem;
+            color: var(--admin-success);
+            font-weight: 600;
+        }
+
+        .btn-view {
+            background: #e0e7ff;
+            color: var(--admin-primary);
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .btn-view:hover {
+            background: var(--admin-primary);
+            color: white;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .nav-link {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            text-decoration: none;
+            font-weight: 600;
+            color: #64748b;
+            background: white;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+
+        .nav-link.active {
+            background: var(--admin-primary);
+            color: white;
+            border-color: var(--admin-primary);
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header__inner container">
+            <div class="brand">
+                <a href="home.html" style="text-decoration: none; display: flex; gap: 14px; align-items: center;">
+                    <div class="brand__logo">
+                        <span class="logo-dot"></span>
+                        <span class="logo-dot"></span>
+                        <span class="logo-dot"></span>
+                    </div>
+                    <div class="brand__text">
+                        <div class="brand__name">Github Pharmacy</div>
+                        <div
+                            style="font-size: 0.7rem; color: var(--admin-primary); font-weight: 700; text-transform: uppercase;">
+                            Admin Control Panel</div>
+                    </div>
+                </a>
+            </div>
+            <div class="header__actions">
+                <a href="../home.html" class="btn btn--ghost">← Về trang chủ</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container admin-main">
+        <div class="page-header">
+            <h1>Lịch sử Bán hàng</h1>
+        </div>
+
+        <nav class="nav-tabs">
+            <a href="/admin/users" class="nav-link">👥 Quản lý Người dùng</a>
+            <a href="/admin/sales" class="nav-link active">💰 Doanh thu & Lợi nhuận</a>
+        </nav>
+
+        <section class="glass-card" style="margin-bottom: 2rem; padding: 1.5rem;">
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
+                <div style="flex: 1; min-width: 250px;">
+                    <label
+                        style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 0.5rem; text-transform: uppercase;">🔍
+                        Tìm kiếm đơn hàng</label>
+                    <input type="text" id="searchTerm" placeholder="Tên khách hàng hoặc ID đơn..."
+                        style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 0.75rem; font-size: 0.9rem;"
+                        oninput="renderTable()">
+                </div>
+                <div style="width: 180px;">
+                    <label
+                        style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 0.5rem; text-transform: uppercase;">📅
+                        Từ ngày</label>
+                    <input type="date" id="dateFrom"
+                        style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 0.75rem; font-size: 0.9rem;"
+                        onchange="renderTable()">
+                </div>
+                <div style="width: 180px;">
+                    <label
+                        style="display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 0.5rem; text-transform: uppercase;">📅
+                        Đến ngày</label>
+                    <input type="date" id="dateTo"
+                        style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 0.75rem; font-size: 0.9rem;"
+                        onchange="renderTable()">
+                </div>
+                <button class="nav-link active" onclick="loadSales()"
+                    style="border: none; cursor: pointer; height: 46px;">Làm mới</button>
+            </div>
+        </section>
+
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card__label">Tổng đơn hàng</div>
+                <div class="stat-card__value" id="statOrders">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card__label">Tổng doanh thu</div>
+                <div class="stat-card__value revenue" id="statRevenue">0đ</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card__label">Ước tính lợi nhuận</div>
+                <div class="stat-card__value profit" id="statProfit">0đ</div>
+            </div>
+        </section>
+
+        <section class="glass-card">
+            <div class="table-container">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>ID Đơn</th>
+                            <th>Ngày tháng</th>
+                            <th>Người mua</th>
+                            <th>Thanh toán</th>
+                            <th>Tổng tiền</th>
+                            <th>Lợi nhuận</th>
+                            <th>Trạng thái</th>
+                            <th>Chi tiết</th>
+                        </tr>
+                    </thead>
+                    <tbody id="salesList">
+                        <!-- Loaded via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function formatVND(n) {
+            return n.toLocaleString("vi-VN") + "đ";
+        }
+
+        let allOrders = [];
+
+        async function loadSales() {
+            try {
+                console.log("DEBUG: Fetching sales data from ../api/orders?action=all");
+                const res = await fetch('../api/orders?action=all');
+                if (!res.ok) {
+                    console.error("DEBUG: Fetch failed with status", res.status);
+                    alert("Bạn không có quyền truy cập hoặc cần đăng nhập lại!");
+                    window.location.href = "../login.html";
+                    return;
+                }
+                allOrders = await res.json();
+                renderTable();
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function renderTable() {
+            const searchTerm = document.getElementById('searchTerm').value.toLowerCase();
+            const dateFrom = document.getElementById('dateFrom').value;
+            const dateTo = document.getElementById('dateTo').value;
+
+            const filteredOrders = allOrders.filter(order => {
+                // Search filter
+                const buyerName = order.customerName || "Khách vãng lai";
+                const matchesSearch = buyerName.toLowerCase().includes(searchTerm) ||
+                    order.id.toString().includes(searchTerm);
+
+                // Date filter
+                const orderDate = new Date(order.year, order.month - 1, order.day);
+                let matchesDate = true;
+                if (dateFrom) {
+                    const from = new Date(dateFrom);
+                    from.setHours(0, 0, 0, 0);
+                    matchesDate = matchesDate && (orderDate >= from);
+                }
+                if (dateTo) {
+                    const to = new Date(dateTo);
+                    to.setHours(23, 59, 59, 999);
+                    matchesDate = matchesDate && (orderDate <= to);
+                }
+
+                return matchesSearch && matchesDate;
+            });
+
+            let totalRev = 0;
+            let totalProfit = 0;
+
+            const tbody = document.getElementById('salesList');
+            tbody.innerHTML = filteredOrders.map(order => {
+                let orderProfit = 0;
+                order.items.forEach(item => {
+                    const cost = item.importPrice || (item.price * 0.7);
+                    orderProfit += (item.price - cost) * item.qty;
+                });
+
+                totalRev += order.total;
+                totalProfit += orderProfit;
+
+                return `
+                    <tr>
+                        <td style="font-weight: 700;">#${order.id}</td>
+                        <td>${order.day}/${order.month}/${order.year}</td>
+                        <td style="font-weight: 600; color: #1e293b;">${order.customerName || 'Khách vãng lai'}</td>
+                        <td><span class="badge ${order.method === 'BANK_TRANSFER' ? 'badge--admin' : 'badge--customer'}" style="font-size: 0.7rem;">${order.method}</span></td>
+                        <td class="total-cell">${formatVND(order.total)}</td>
+                        <td class="profit-cell">+${formatVND(orderProfit)}</td>
+                        <td>
+                            <span class="badge" style="background: ${order.status === 'PAID' ? '#10b981' : '#f59e0b'}; color: white; font-size: 0.7rem;">
+                                ${order.status === 'PAID' ? '✅ ĐÃ TRẢ' : '⏳ CHỜ GD'}
+                            </span>
+                        </td>
+                        <td><button class="btn-view" onclick="toggleDetails(${order.id})">Xem</button></td>
+                    </tr>
+                    <tr id="details-${order.id}" class="detail-row">
+                        <td colspan="8">
+                            <div class="items-list">
+                                <div style="font-weight: 700; margin-bottom: 0.5rem; display: flex; justify-content: space-between;">
+                                    <span>Sản phẩm trong đơn</span>
+                                    <span>Lợi nhuận gộp</span>
+                                </div>
+                                ${order.items.map(item => {
+                    const itemCost = item.importPrice || (item.price * 0.7);
+                    const itemProfit = (item.price - itemCost) * item.qty;
+                    return `
+                                    <div class="item-line">
+                                        <span>${item.name} (x${item.qty})</span>
+                                        <span class="item-profit">+${formatVND(itemProfit)}</span>
+                                    </div>
+                                    `;
+                }).join('')}
+                            </div>
+                            <div style="margin-top: 1rem; display: flex; gap: 1rem; align-items: flex-start;">
+                                ${order.paymentProof ? `
+                                    <div style="flex: 1;">
+                                        <p style="font-weight: 700; font-size: 0.8rem; margin-bottom: 0.5rem;">📸 Ảnh chuyển khoản:</p>
+                                        <img src="${order.paymentProof}" style="max-width: 200px; border-radius: 8px; border: 1px solid #ddd; cursor: pointer;" onclick="window.open(this.src)">
+                                    </div>
+                                ` : '<div style="flex: 1; color: #94a3b8; font-style: italic; font-size: 0.8rem;">(Chưa tải ảnh bằng chứng)</div>'}
+                                
+                                <div style="text-align: right;">
+                                    ${order.status !== 'PAID' ? `
+                                        <button onclick="updateOrderStatus(${order.id}, 'PAID')" 
+                                            style="background: #10b981; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 0.75rem; font-weight: 700; cursor: pointer;">
+                                            💰 Xác nhận Đã nhận tiền
+                                        </button>
+                                    ` : '<span style="color: #10b981; font-weight: 700;">✅ Giao dịch đã hoàn tất</span>'}
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            document.getElementById('statOrders').textContent = filteredOrders.length;
+            document.getElementById('statRevenue').textContent = formatVND(totalRev);
+            document.getElementById('statProfit').textContent = formatVND(totalProfit);
+        }
+
+        window.toggleDetails = (id) => {
+            const row = document.getElementById(`details-${id}`);
+            row.classList.toggle('active');
+        };
+
+        async function updateOrderStatus(orderId, newStatus) {
+            if (!confirm(`Xác nhận đơn hàng #${orderId} đã được thanh toán?`)) return;
+
+            try {
+                const res = await fetch('../api/orders', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ orderId: orderId, status: newStatus })
+                });
+
+                if (res.ok) {
+                    alert('Cập nhật trạng thái thành công!');
+                    loadSales(); // Reload data
+                } else {
+                    const err = await res.json();
+                    alert('Lỗi: ' + err.message);
+                }
+            } catch (e) {
+                console.error(e);
+                alert('Có lỗi xảy ra khi cập nhật.');
+            }
+        }
+
+        loadSales();
+    </script>
+</body>
+
+</html>

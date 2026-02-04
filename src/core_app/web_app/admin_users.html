@@ -362,6 +362,15 @@
             </div>
         </div>
 
+        <nav style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+            <a href="/admin/users"
+                style="padding: 0.75rem 1.5rem; border-radius: 0.75rem; text-decoration: none; font-weight: 600; color: white; background: var(--admin-primary); border: 1px solid var(--admin-primary);">👥
+                Quản lý Người dùng</a>
+            <a href="/admin/sales"
+                style="padding: 0.75rem 1.5rem; border-radius: 0.75rem; text-decoration: none; font-weight: 600; color: #64748b; background: white; border: 1px solid #e2e8f0;">💰
+                Doanh thu & Lợi nhuận</a>
+        </nav>
+
         <!-- ADD FORM -->
         <section class="glass-card">
             <h2 style="margin-bottom: 1.5rem; font-size: 1.25rem;">✨ Thêm nhân viên / khách hàng mới</h2>
@@ -511,7 +520,7 @@
                         </td>
                         <td>
                             <span class="badge ${u.role === 'ADMIN' ? 'badge--admin' : 'badge--customer'}">
-                                ${u.role === 'ADMIN' ? '🛡️ Admin' : '👤 Guest'}
+                                ${u.role === 'ADMIN' ? '🛡️ Admin' : '👤 Thành viên'}
                             </span>
                         </td>
                         <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end;">

@@ -64,6 +64,25 @@
             <version>12.6.1.jre11</version>
         </dependency>
 
+        <!-- Google Gson -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+
+        <!-- Jakarta Mail -->
+        <dependency>
+            <groupId>jakarta.mail</groupId>
+            <artifactId>jakarta.mail-api</artifactId>
+            <version>2.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.angus</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>2.0.2</version>
+        </dependency>
+
     </dependencies>
 <!--
 “Đây là một dự án Web Java (WAR) tên là pharmacy-system,

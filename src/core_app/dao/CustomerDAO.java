@@ -41,15 +41,16 @@ public class CustomerDAO {
     }
 
     public boolean add(Customer c) {
-        String sql = "INSERT INTO Customer (full_name, phone, address, username, password, role) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Customer (full_name, phone, address, email, username, password, role) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, c.getFullName());
             ps.setString(2, c.getPhoneNumber());
             ps.setString(3, c.getAddress());
-            ps.setString(4, c.getUsername());
-            ps.setString(5, c.getPassword());
-            ps.setString(6, c.getRole());
+            ps.setString(4, c.getEmail());
+            ps.setString(5, c.getUsername());
+            ps.setString(6, c.getPassword());
+            ps.setString(7, c.getRole());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -88,6 +89,7 @@ public class CustomerDAO {
                 rs.getString("full_name"),
                 rs.getString("phone"),
                 rs.getString("address"),
+                rs.getString("email"),
                 rs.getString("username"),
                 rs.getString("password"),
                 rs.getString("role"));

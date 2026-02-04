@@ -7,8 +7,10 @@ public class InvoiceDetail {
     private int quantity;
     private double unitPrice;
 
+    private double importPrice;
+
     public InvoiceDetail(String medicineId, String medicineName,
-                         int quantity, double unitPrice) {
+            int quantity, double unitPrice) {
         this.medicineId = medicineId;
         this.medicineName = medicineName;
         this.quantity = quantity;
@@ -31,4 +33,11 @@ public class InvoiceDetail {
         return unitPrice;
     }
 
+    public double getImportPrice() {
+        return importPrice;
+    }
+
+    public void setImportPrice(double importPrice) {
+        this.importPrice = importPrice;
+    }
 }

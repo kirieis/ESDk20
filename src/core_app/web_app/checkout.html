@@ -272,9 +272,73 @@
                     Nội dung chuyển khoản: <b id="transferContent">ĐH-xxxxx</b>
                 </div>
 
+                <div class="upload-section" style="margin: 24px 0; text-align: left;">
+                    <p
+                        style="font-weight: 700; font-size: 14px; margin-bottom: 12px; color: #475569; letter-spacing: 0.5px; text-transform: uppercase;">
+                        📸 Xác thực chuyển khoản
+                    </p>
+
+                    <div style="position: relative;">
+                        <!-- Hidden real input -->
+                        <input type="file" id="paymentProof" accept="image/*" style="display: none;">
+
+                        <!-- Custom styled label as button -->
+                        <label for="paymentProof" style="
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 12px;
+                            padding: 20px;
+                            background: white;
+                            border: 2px dashed #6366f1;
+                            border-radius: 16px;
+                            cursor: pointer;
+                            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                            color: #6366f1;
+                            font-weight: 700;
+                            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+                        " onmouseover="this.style.background='#f5f3ff'; this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.background='white'; this.style.transform='scale(1)'">
+                            <span style="font-size: 24px;">📤</span>
+                            <span>Tải ảnh màn hình lên ngay</span>
+                        </label>
+                    </div>
+
+                    <div id="proofPreview" style="margin-top: 16px; display: none; animation: slideDown 0.4s ease-out;">
+                        <div
+                            style="padding: 12px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;">
+                            <p style="font-size: 12px; color: #64748b; margin-bottom: 8px; font-weight: 600;">Xem trước
+                                bằng chứng:</p>
+                            <img src=""
+                                style="width: 100%; max-height: 300px; object-fit: contain; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);">
+                        </div>
+                    </div>
+                </div>
+
+                <style>
+                    @keyframes slideDown {
+                        from {
+                            opacity: 0;
+                            transform: translateY(-10px);
+                        }
+
+                        to {
+                            opacity: 1;
+                            transform: translateY(0);
+                        }
+                    }
+
+                    .btn-disabled {
+                        background: #cbd5e1 !important;
+                        color: #94a3b8 !important;
+                        cursor: not-allowed !important;
+                        transform: none !important;
+                    }
+                </style>
+
                 <button class="btn btn--primary" id="btnConfirmPayment"
-                    style="width: 100%; justify-content: center; padding: 16px; font-size: 16px;">
-                    ✅ XÁC NHẬN ĐÃ CHUYỂN KHOẢN
+                    style="width: 100%; justify-content: center; padding: 18px; font-size: 16px; font-weight: 800; border-radius: 16px; box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3); transition: all 0.3s;">
+                    🚀 XÁC NHẬN THANH TOÁN
                 </button>
             </div>
         </div>
@@ -293,7 +357,7 @@
         </div>
     </div>
 
-    <script src="checkout.js"></script>
+    <script src="checkout.js?v=3"></script>
 </body>
 
 </html>

@@ -25,16 +25,6 @@
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
 
-    <!-- SessionAuthServlet (No Annotation) -->
-    <servlet>
-        <servlet-name>SessionAuthServlet</servlet-name>
-        <servlet-class>core_app.servlet.SessionAuthServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SessionAuthServlet</servlet-name>
-        <url-pattern>/api/auth-status</url-pattern>
-    </servlet-mapping>
-
     <!-- RegisterServlet has @WebServlet("/register") - REMOVED from XML to avoid duplicate error -->
     <!-- UserManagementServlet has @WebServlet("/admin/users") - REMOVED from XML to avoid duplicate error -->
 

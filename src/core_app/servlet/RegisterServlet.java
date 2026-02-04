@@ -23,27 +23,40 @@ public class RegisterServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String fullName = req.getParameter("fullName");
         String phone = req.getParameter("phone");
+        String email = req.getParameter("email");
         String address = req.getParameter("address");
         String username = req.getParameter("username");
         String password = req.getParameter("password");
-
-        Customer c = new Customer();
-        c.setFullName(fullName);
-        c.setPhoneNumber(phone);
-        c.setAddress(address);
-        c.setUsername(username);
-        c.setPassword(password);
-        c.setRole("CUSTOMER"); // Force CUSTOMER role for public registration
 
         if (!isValidPassword(password)) {
             resp.sendRedirect("register.html?error=weak_password");
             return;
         }
 
-        if (customerDAO.add(c)) {
-            resp.sendRedirect("login.html?registered=true");
+        // Tạo đối tượng chờ xác nhận
+        Customer c = new Customer();
+        c.setFullName(fullName);
+        c.setPhoneNumber(phone);
+        c.setEmail(email);
+        c.setAddress(address);
+        c.setUsername(username);
+        c.setPassword(password);
+        c.setRole("CUSTOMER");
+
+        // Gửi OTP
+        String otp = core_app.util.EmailUtil.generateOTP();
+        boolean sent = core_app.util.EmailUtil.sendOTP(email, otp);
+
+        if (sent) {
+            jakarta.servlet.http.HttpSession session = req.getSession();
+            session.setAttribute("pendingUser", c);
+            session.setAttribute("registrationOTP", otp);
+            session.setAttribute("otpTime", System.currentTimeMillis());
+
+            // Chuyển hướng sang trang nhập OTP
+            resp.sendRedirect("verify_otp.html");
         } else {
-            resp.sendRedirect("register.html?error=exists");
+            resp.sendRedirect("register.html?error=mail_error");
         }
     }
 
